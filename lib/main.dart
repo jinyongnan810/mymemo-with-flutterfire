@@ -1,6 +1,22 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-void main() {
+Future<void> main() async {
+  await dotenv.load(fileName: ".env");
+  await Firebase.initializeApp(
+      options: FirebaseOptions(
+    apiKey: dotenv.env['API_KEY']!,
+    authDomain: dotenv.env['AUTH_DOMAIN']!,
+    projectId: dotenv.env['PROJECT_ID']!,
+    messagingSenderId: dotenv.env['MESSAGING_SENDER_ID']!,
+    appId: dotenv.env['APP_ID']!,
+  ));
+  final docs = await FirebaseFirestore.instance.collection('tests').get();
+  docs.docs.forEach(
+    (element) => print(element.data()),
+  );
   runApp(const MyApp());
 }
 
