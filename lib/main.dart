@@ -8,6 +8,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:mymemo_with_flutterfire/models/memo.dart';
+
 Future<void> main() async {
   await dotenv.load(fileName: ".env");
   await Firebase.initializeApp(
@@ -18,26 +20,7 @@ Future<void> main() async {
     messagingSenderId: dotenv.env['MESSAGING_SENDER_ID']!,
     appId: dotenv.env['APP_ID']!,
   ));
-  if (kIsWeb) {
-    print('is web');
-    final docs = await FirebaseFirestore.instance.collection('tests').get();
-    docs.docs.forEach(
-      (element) => print(element.data()),
-    );
-  } else if (Platform.isWindows) {
-    print('windows desktop');
-    final url = Uri.parse(
-        "https://firestore.googleapis.com/v1/projects/${dotenv.env['PROJECT_ID']}/databases/(default)/documents/tests");
-    final ordersRes = await http.get(url);
-    final Map<String, dynamic> res = jsonDecode(ordersRes.body);
-    print(res);
-  } else {
-    print('not windows desktop or web');
-    final docs = await FirebaseFirestore.instance.collection('tests').get();
-    docs.docs.forEach(
-      (element) => print(element.data()),
-    );
-  }
+  await Memo(userId: 'user-id', title: 'test1', content: 'test1content').save();
   runApp(const MyApp());
 }
 
