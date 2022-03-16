@@ -20,7 +20,10 @@ Future<void> main() async {
     messagingSenderId: dotenv.env['MESSAGING_SENDER_ID']!,
     appId: dotenv.env['APP_ID']!,
   ));
-  await Memo(userId: 'user-id', title: 'test1', content: 'test1content').save();
+  final memo = Memo(userId: 'user-id', title: 'test1', content: 'test1content');
+  await memo.save();
+  memo.content = 'updated';
+  await memo.save();
   runApp(const MyApp());
 }
 

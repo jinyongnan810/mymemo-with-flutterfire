@@ -20,20 +20,29 @@ class Memo {
       this.createdAt,
       this.updatedAt});
   Future<void> save() async {
+    final now = DateTime.now().millisecondsSinceEpoch;
     if (kIsWeb || !Platform.isWindows) {
       print('not windows desktop');
       if (id == null) {
-        print('create');
         final res = await FirebaseFirestore.instance.collection('memos').add({
           'userId': userId,
           'title': title,
           'content': content,
-          'createdAt': DateTime.now().millisecondsSinceEpoch,
-          'updatedAt': DateTime.now().millisecondsSinceEpoch,
+          'createdAt': now,
+          'updatedAt': now,
         });
-        print(res.id);
+        id = res.id;
+        createdAt = now;
+        updatedAt = now;
+        print('created: $id');
       } else {
-        print('update');
+        await FirebaseFirestore.instance.collection('memos').doc(id).update({
+          'title': title,
+          'content': content,
+          'updatedAt': now,
+        });
+        updatedAt = now;
+        print('updated');
       }
     } else if (Platform.isWindows) {
       print('windows desktop');
@@ -46,16 +55,28 @@ class Memo {
                 'userId': {'stringValue': userId},
                 'title': {'stringValue': title},
                 'content': {'stringValue': content},
-                'createdAt': {
-                  'integerValue': DateTime.now().millisecondsSinceEpoch
-                },
-                'updatedAt': {
-                  'integerValue': DateTime.now().millisecondsSinceEpoch
-                },
+                'createdAt': {'integerValue': now},
+                'updatedAt': {'integerValue': now},
               }
             }));
         final Map<String, dynamic> decodedRes = jsonDecode(res.body);
-        print(decodedRes['name'].toString().split('/').last);
+        id = decodedRes['name'].toString().split('/').last;
+        createdAt = now;
+        updatedAt = now;
+        print('created $id');
+      } else {
+        final url = Uri.parse(
+            "https://firestore.googleapis.com/v1/projects/${dotenv.env['PROJECT_ID']}/databases/(default)/documents/memos/$id?updateMask.fieldPaths=title&&updateMask.fieldPaths=content&&updateMask.fieldPaths=updatedAt");
+        final res = await http.patch(url,
+            body: jsonEncode({
+              'fields': {
+                'title': {'stringValue': title},
+                'content': {'stringValue': content},
+                'updatedAt': {'integerValue': now},
+              }
+            }));
+        updatedAt = now;
+        print('updated');
       }
     }
   }
