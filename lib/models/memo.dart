@@ -80,4 +80,20 @@ class Memo {
       }
     }
   }
+
+  Future<void> delete() async {
+    if (kIsWeb || !Platform.isWindows) {
+      print('not windows desktop');
+      await FirebaseFirestore.instance.collection('memos').doc(id).delete();
+      print('deleted');
+    } else if (Platform.isWindows) {
+      print('windows desktop');
+
+      final url = Uri.parse(
+          "https://firestore.googleapis.com/v1/projects/${dotenv.env['PROJECT_ID']}/databases/(default)/documents/memos/$id");
+      final res = await http.delete(url);
+      print(jsonDecode(res.body));
+      print('deleted');
+    }
+  }
 }

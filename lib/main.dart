@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
@@ -24,6 +25,7 @@ Future<void> main() async {
   await memo.save();
   memo.content = 'updated';
   await memo.save();
+  Timer(const Duration(seconds: 10), () => memo.delete());
   runApp(const MyApp());
 }
 
