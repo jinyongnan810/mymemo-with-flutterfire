@@ -7,7 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+import 'package:mymemo_with_flutterfire/components/memo-list.dart';
+import 'package:mymemo_with_flutterfire/providers/memos.dart';
 import 'dart:convert';
+import 'package:provider/provider.dart';
 
 import 'package:mymemo_with_flutterfire/models/memo.dart';
 
@@ -34,14 +37,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.deepPurple,
-      ),
-      home: const MyHomePage(),
-      debugShowCheckedModeBanner: false,
-    );
+    return MultiProvider(
+        providers: [ChangeNotifierProvider(create: (ctx) => Memos())],
+        child: MaterialApp(
+          title: 'Flutter Demo',
+          theme: ThemeData(
+            primarySwatch: Colors.deepPurple,
+          ),
+          home: const MyHomePage(),
+          debugShowCheckedModeBanner: false,
+        ));
   }
 }
 
@@ -54,7 +59,7 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Kin's Page"),
       ),
-      body: const Center(child: Text('empty')),
+      body: const MemoList(),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.edit),
         onPressed: () {},

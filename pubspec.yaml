@@ -38,6 +38,7 @@ dependencies:
   firebase_core_desktop: ^0.1.1-dev.3
   flutter_dotenv: ^5.0.2
   http: ^0.13.4
+  provider: ^6.0.2
 
 dev_dependencies:
   flutter_test:
