@@ -24,11 +24,12 @@ Future<void> main() async {
     messagingSenderId: dotenv.env['MESSAGING_SENDER_ID']!,
     appId: dotenv.env['APP_ID']!,
   ));
-  final memo = Memo(userId: 'user-id', title: 'test1', content: 'test1content');
-  await memo.save();
-  memo.content = 'updated';
-  await memo.save();
-  Timer(const Duration(seconds: 10), () => memo.delete());
+
+  // for (int i = 0; i < 50; i++) {
+  //   final memo =
+  //       Memo(userId: 'user-id-$i', title: 'test$i', content: 'content$i');
+  //   await memo.save();
+  // }
   runApp(const MyApp());
 }
 

@@ -11,12 +11,26 @@ class MemoList extends StatefulWidget {
 
 class _MemoListState extends State<MemoList> {
   late final Future<void>? _fetchFirstItems;
+  late final ScrollController _scrollController;
 
   @override
   void initState() {
     super.initState();
     _fetchFirstItems =
         Provider.of<Memos>(context, listen: false).fetchFirstItems();
+    _scrollController = ScrollController();
+    _scrollController.addListener(() {
+      if (_scrollController.offset ==
+          _scrollController.position.maxScrollExtent) {
+        Provider.of<Memos>(context, listen: false).fetchNextItems();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -37,6 +51,7 @@ class _MemoListState extends State<MemoList> {
 
             return Consumer<Memos>(
               builder: (ctx, memos, _) => ListView.builder(
+                controller: _scrollController,
                 itemCount: memos.items.length,
                 itemBuilder: (ctx, index) => ListTile(
                   title: Text(memos.items[index].title),
