@@ -19,6 +19,28 @@ class Memo {
       required this.content,
       this.createdAt,
       this.updatedAt});
+
+  factory Memo.fromJsonRest(Map<String, dynamic> json) {
+    return Memo(
+      id: json['name'].toString().split('/').last,
+      userId: json['fields']['userId']['stringValue'],
+      title: json['fields']['title']['stringValue'],
+      content: json['fields']['content']['stringValue'],
+      createdAt:
+          int.parse(json['fields']['createdAt']['integerValue'].toString()),
+      updatedAt:
+          int.parse(json['fields']['updatedAt']['integerValue'].toString()),
+    );
+  }
+  factory Memo.fromJson(String id, Map<String, dynamic> json) {
+    return Memo(
+        id: id,
+        userId: json['userId'],
+        title: json['title'],
+        content: json['content'],
+        createdAt: json['createdAt'],
+        updatedAt: json['updatedAt']);
+  }
   Future<void> save() async {
     final now = DateTime.now().millisecondsSinceEpoch;
     if (kIsWeb || !Platform.isWindows) {
