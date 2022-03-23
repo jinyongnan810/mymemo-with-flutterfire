@@ -43,10 +43,10 @@ class _MemoListState extends State<MemoList> {
           } else {
             if (dataSnapshot.error != null) {
               print(dataSnapshot.error);
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                content: Text('Error loading the memos.Please refresh again.'),
-                duration: Duration(seconds: 5),
-              ));
+              // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              //   content: Text('Error loading the memos.Please refresh again.'),
+              //   duration: Duration(seconds: 5),
+              // ));
             }
 
             return Consumer<Memos>(

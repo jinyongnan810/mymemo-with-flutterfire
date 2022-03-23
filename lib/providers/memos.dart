@@ -26,7 +26,10 @@ class Memos extends ChangeNotifier {
           .orderBy('updatedAt')
           .limit(itemsPerPage)
           .get();
-
+      if (res.docs.isEmpty) {
+        lastFetchedDocument = null;
+        return;
+      }
       final memos = res.docs.map<Memo>((doc) {
         final docData = doc.data();
         final Memo memo = Memo.fromJson(doc.id, docData);
@@ -41,6 +44,10 @@ class Memos extends ChangeNotifier {
           "https://firestore.googleapis.com/v1/projects/${dotenv.env['PROJECT_ID']}/databases/(default)/documents/memos?pageSize=$itemsPerPage&orderBy=updatedAt");
       final res = await http.get(url);
       final Map<String, dynamic> decodedRes = jsonDecode(res.body);
+      if (decodedRes['documents'] == null) {
+        nextPageToken = null;
+        return;
+      }
       final memos = (decodedRes['documents'] as List<dynamic>).map((doc) {
         return Memo.fromJsonRest(doc);
       });
@@ -54,22 +61,28 @@ class Memos extends ChangeNotifier {
   Future<void> fetchNextItems() async {
     if (kIsWeb || !Platform.isWindows) {
       print('fetchNextItems not windows desktop');
+      if (lastFetchedDocument == null) {
+        print('lastFetchedDocument is null');
+        return;
+      }
       QuerySnapshot<Map<String, dynamic>> res = await FirebaseFirestore.instance
           .collection('memos')
           .orderBy('updatedAt')
           .startAfterDocument(lastFetchedDocument!)
           .limit(itemsPerPage)
           .get();
-      if (res.docs.isNotEmpty) {
-        final memos = res.docs.map<Memo>((doc) {
-          final docData = doc.data();
-          final Memo memo = Memo.fromJson(doc.id, docData);
-          return memo;
-        });
-        lastFetchedDocument = res.docs.last;
-        _items.addAll(memos);
-        notifyListeners();
+      if (res.docs.isEmpty) {
+        lastFetchedDocument = null;
+        return;
       }
+      final memos = res.docs.map<Memo>((doc) {
+        final docData = doc.data();
+        final Memo memo = Memo.fromJson(doc.id, docData);
+        return memo;
+      });
+      lastFetchedDocument = res.docs.last;
+      _items.addAll(memos);
+      notifyListeners();
     } else if (Platform.isWindows) {
       print('fetchNextItems windows desktop');
       if (nextPageToken == null) {
@@ -80,6 +93,11 @@ class Memos extends ChangeNotifier {
           "https://firestore.googleapis.com/v1/projects/${dotenv.env['PROJECT_ID']}/databases/(default)/documents/memos?pageSize=$itemsPerPage&orderBy=updatedAt&pageToken=$nextPageToken");
       final res = await http.get(url);
       final Map<String, dynamic> decodedRes = jsonDecode(res.body);
+      if (decodedRes['documents'] == null) {
+        nextPageToken = null;
+        return;
+      }
+      ;
       final memos = (decodedRes['documents'] as List<dynamic>).map((doc) {
         return Memo.fromJsonRest(doc);
       });
