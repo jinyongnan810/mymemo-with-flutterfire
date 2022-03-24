@@ -8,6 +8,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:mymemo_with_flutterfire/components/memo-list.dart';
+import 'package:mymemo_with_flutterfire/pages/memo-list.dart';
 import 'package:mymemo_with_flutterfire/providers/memos.dart';
 import 'dart:convert';
 import 'package:provider/provider.dart';
@@ -45,26 +46,8 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             primarySwatch: Colors.deepPurple,
           ),
-          home: const MyHomePage(),
+          routes: {'/': (ctx) => const MemoListPage()},
           debugShowCheckedModeBanner: false,
         ));
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Kin's Page"),
-      ),
-      body: const MemoList(),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.edit),
-        onPressed: () {},
-      ),
-    );
   }
 }
