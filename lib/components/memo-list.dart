@@ -12,6 +12,7 @@ class MemoList extends StatefulWidget {
 class _MemoListState extends State<MemoList> {
   late final Future<void>? _fetchFirstItems;
   late final ScrollController _scrollController;
+  bool _loadingMore = false;
 
   @override
   void initState() {
@@ -19,10 +20,18 @@ class _MemoListState extends State<MemoList> {
     _fetchFirstItems =
         Provider.of<Memos>(context, listen: false).fetchFirstItems();
     _scrollController = ScrollController();
-    _scrollController.addListener(() {
+    _scrollController.addListener(() async {
       if (_scrollController.offset ==
           _scrollController.position.maxScrollExtent) {
-        Provider.of<Memos>(context, listen: false).fetchNextItems();
+        setState(() {
+          _loadingMore = true;
+        });
+        // await Future.delayed(const Duration(seconds: 5));
+        await Provider.of<Memos>(context, listen: false).fetchNextItems();
+        setState(() {
+          _loadingMore = false;
+        });
+        return;
       }
     });
   }
@@ -50,19 +59,30 @@ class _MemoListState extends State<MemoList> {
             }
 
             return Consumer<Memos>(
-              builder: (ctx, memos, _) => ListView.builder(
-                controller: _scrollController,
-                itemCount: memos.items.length,
-                itemBuilder: (ctx, index) => ListTile(
-                  title: Text(memos.items[index].title),
-                  subtitle: Text(memos.items[index].content),
-                  onTap: () => Navigator.of(context).pushNamed(
-                    '/memo',
-                    arguments: memos.items[index],
-                  ),
-                ),
-              ),
-            );
+                builder: (ctx, memos, _) => Column(
+                      children: [
+                        Expanded(
+                            child: ListView.builder(
+                          controller: _scrollController,
+                          itemCount: memos.items.length,
+                          itemBuilder: (ctx, index) => ListTile(
+                            title: Text(memos.items[index].title),
+                            subtitle: Text(memos.items[index].content),
+                            onTap: () => Navigator.of(context).pushNamed(
+                              '/memo',
+                              arguments: memos.items[index],
+                            ),
+                          ),
+                        )),
+                        if (_loadingMore)
+                          const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          )
+                      ],
+                    ));
           }
         });
   }
