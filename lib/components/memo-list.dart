@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mymemo_with_flutterfire/components/memo-item.dart';
 import 'package:mymemo_with_flutterfire/providers/memos.dart';
 import 'package:provider/provider.dart';
 
@@ -62,17 +63,12 @@ class _MemoListState extends State<MemoList> {
                 builder: (ctx, memos, _) => Column(
                       children: [
                         Expanded(
-                            child: ListView.builder(
+                            child: GridView.count(
+                          crossAxisCount: 4,
                           controller: _scrollController,
-                          itemCount: memos.items.length,
-                          itemBuilder: (ctx, index) => ListTile(
-                            title: Text(memos.items[index].title),
-                            subtitle: Text(memos.items[index].content),
-                            onTap: () => Navigator.of(context).pushNamed(
-                              '/memo',
-                              arguments: memos.items[index],
-                            ),
-                          ),
+                          children: [
+                            ...memos.items.map((memo) => MemoItem(memo))
+                          ],
                         )),
                         if (_loadingMore)
                           const Padding(

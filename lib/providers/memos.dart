@@ -13,7 +13,7 @@ class Memos extends ChangeNotifier {
   final List<Memo> _items = [];
   DocumentSnapshot? lastFetchedDocument;
   String? nextPageToken;
-  get items {
+  List<Memo> get items {
     return [..._items];
   }
 
