@@ -17,6 +17,10 @@ class Memos extends ChangeNotifier {
     return [..._items];
   }
 
+  Memo? getItemById(String id) {
+    return _items.firstWhere((element) => element.id == id);
+  }
+
   Future<void> fetchFirstItems() async {
     _items.clear();
     if (kIsWeb || !Platform.isWindows) {

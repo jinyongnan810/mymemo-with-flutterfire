@@ -8,6 +8,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:mymemo_with_flutterfire/components/memo-list.dart';
+import 'package:mymemo_with_flutterfire/pages/memo-detail.dart';
 import 'package:mymemo_with_flutterfire/pages/memo-list.dart';
 import 'package:mymemo_with_flutterfire/providers/memos.dart';
 import 'dart:convert';
@@ -46,7 +47,10 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             primarySwatch: Colors.deepPurple,
           ),
-          routes: {'/': (ctx) => const MemoListPage()},
+          routes: {
+            '/': (ctx) => const MemoListPage(),
+            '/detail': (ctx) => const MemoDetailPage()
+          },
           debugShowCheckedModeBanner: false,
         ));
   }
