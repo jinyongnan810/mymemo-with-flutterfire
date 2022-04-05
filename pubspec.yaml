@@ -39,6 +39,7 @@ dependencies:
   flutter_dotenv: ^5.0.2
   http: ^0.13.4
   provider: ^6.0.2
+  flutter_markdown: ^0.6.9+1
 
 dev_dependencies:
   flutter_test:
