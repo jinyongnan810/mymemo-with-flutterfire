@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:mymemo_with_flutterfire/providers/memos.dart';
+import 'package:mymemo_with_flutterfire/shared/markdown_extensions.dart';
 import 'package:provider/provider.dart';
 
 class MemoDetailPage extends StatelessWidget {
@@ -17,6 +18,7 @@ class MemoDetailPage extends StatelessWidget {
         Center(child: Text(memo?.title ?? 'Not found')),
         Expanded(
             child: Markdown(
+          extensionSet: MarkdownExtensionSet.githubWeb.value,
           data: memo?.content ?? '',
         ))
       ]),
