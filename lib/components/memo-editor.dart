@@ -26,6 +26,7 @@ class _MemoEditorState extends State<MemoEditor> {
       setState(() {
         _content = _contentEditor.text;
       });
+      widget.memo.content = _content;
     });
     super.initState();
   }
@@ -41,18 +42,21 @@ class _MemoEditorState extends State<MemoEditor> {
     return Column(children: [
       Center(child: Text(_title)),
       Expanded(
-          child: Split(
-              axis: Axis.horizontal,
-              initialFirstFraction: 0.5,
-              firstChild: TextField(
-                keyboardType: TextInputType.multiline,
-                maxLines: null,
-                controller: _contentEditor,
-              ),
-              secondChild: Markdown(
-                extensionSet: MarkdownExtensionSet.githubWeb.value,
-                data: _content,
-              )))
+          child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        child: Split(
+            axis: Axis.horizontal,
+            initialFirstFraction: 0.5,
+            firstChild: TextField(
+              keyboardType: TextInputType.multiline,
+              maxLines: null,
+              controller: _contentEditor,
+            ),
+            secondChild: Markdown(
+              extensionSet: MarkdownExtensionSet.githubWeb.value,
+              data: _content,
+            )),
+      ))
     ]);
   }
 }

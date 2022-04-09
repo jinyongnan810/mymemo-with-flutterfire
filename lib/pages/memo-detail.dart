@@ -27,14 +27,32 @@ class _MemoDetailPageState extends State<MemoDetailPage> {
           : _editing
               ? MemoEditor(memo: memo)
               : MemoRendered(memo: memo),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          setState(() {
-            _editing = !_editing;
-          });
-        },
-        child: _editing ? const Icon(Icons.save) : const Icon(Icons.edit),
-      ),
+      floatingActionButton: memo == null
+          ? null
+          : FloatingActionButton(
+              onPressed: () async {
+                if (_editing) {
+                  try {
+                    await memo.save();
+                  } catch (e) {
+                    print(Text(e.toString()));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Error saving memo.')));
+                    return;
+                  }
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Memo saved.')));
+                  setState(() {
+                    _editing = false;
+                  });
+                } else {
+                  setState(() {
+                    _editing = true;
+                  });
+                }
+              },
+              child: _editing ? const Icon(Icons.save) : const Icon(Icons.edit),
+            ),
     );
   }
 }
