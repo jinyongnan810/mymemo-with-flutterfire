@@ -27,7 +27,7 @@ class Memos extends ChangeNotifier {
       print('fetchFirstItems not windows desktop');
       QuerySnapshot<Map<String, dynamic>> res = await FirebaseFirestore.instance
           .collection('memos')
-          .orderBy('updatedAt')
+          .orderBy('updatedAt', descending: true)
           .limit(itemsPerPage)
           .get();
       if (res.docs.isEmpty) {
@@ -45,7 +45,7 @@ class Memos extends ChangeNotifier {
     } else if (Platform.isWindows) {
       print('fetchFirstItems windows desktop');
       final url = Uri.parse(
-          "https://firestore.googleapis.com/v1/projects/${dotenv.env['PROJECT_ID']}/databases/(default)/documents/memos?pageSize=$itemsPerPage&orderBy=updatedAt");
+          "https://firestore.googleapis.com/v1/projects/${dotenv.env['PROJECT_ID']}/databases/(default)/documents/memos?pageSize=$itemsPerPage&orderBy=updatedAt desc");
       final res = await http.get(url);
       final Map<String, dynamic> decodedRes = jsonDecode(res.body);
       if (decodedRes['documents'] == null) {
@@ -71,7 +71,7 @@ class Memos extends ChangeNotifier {
       }
       QuerySnapshot<Map<String, dynamic>> res = await FirebaseFirestore.instance
           .collection('memos')
-          .orderBy('updatedAt')
+          .orderBy('updatedAt', descending: true)
           .startAfterDocument(lastFetchedDocument!)
           .limit(itemsPerPage)
           .get();
@@ -94,7 +94,7 @@ class Memos extends ChangeNotifier {
         return;
       }
       final url = Uri.parse(
-          "https://firestore.googleapis.com/v1/projects/${dotenv.env['PROJECT_ID']}/databases/(default)/documents/memos?pageSize=$itemsPerPage&orderBy=updatedAt&pageToken=$nextPageToken");
+          "https://firestore.googleapis.com/v1/projects/${dotenv.env['PROJECT_ID']}/databases/(default)/documents/memos?pageSize=$itemsPerPage&orderBy=updatedAt desc&pageToken=$nextPageToken");
       final res = await http.get(url);
       final Map<String, dynamic> decodedRes = jsonDecode(res.body);
       if (decodedRes['documents'] == null) {
