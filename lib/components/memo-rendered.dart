@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:mymemo_with_flutterfire/components/code-builder.dart';
 import 'package:mymemo_with_flutterfire/models/memo.dart';
 import 'package:mymemo_with_flutterfire/shared/markdown_extensions.dart';
 
@@ -12,6 +13,9 @@ class MemoRendered extends StatelessWidget {
     return Markdown(
       extensionSet: MarkdownExtensionSet.githubWeb.value,
       data: memo.content,
+      builders: {
+        'code': CodeBuilder(),
+      },
     );
   }
 }
