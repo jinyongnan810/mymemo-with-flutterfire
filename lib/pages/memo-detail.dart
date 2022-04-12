@@ -19,7 +19,16 @@ class _MemoDetailPageState extends State<MemoDetailPage> {
     final id = ModalRoute.of(context)!.settings.arguments as String;
     final memo = Provider.of<Memos>(context).getItemById(id);
     return Scaffold(
-      appBar: AppBar(title: Text(memo?.title ?? 'Not found')),
+      appBar: AppBar(
+        title: Text(memo?.title ?? 'Not found'),
+        // leading: Builder(
+        //   builder: ((context) => IconButton(
+        //       onPressed: () {
+        //         Navigator.of(context).pushReplacementNamed('/');
+        //       },
+        //       icon: const Icon(Icons.home))),
+        // ),
+      ),
       body: memo == null
           ? const Center(
               child: Text('Memo not found.'),
