@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mymemo_with_flutterfire/components/memo-editor.dart';
 import 'package:mymemo_with_flutterfire/components/memo-rendered.dart';
+import 'package:mymemo_with_flutterfire/models/memo.dart';
 import 'package:mymemo_with_flutterfire/providers/memos.dart';
 import 'package:provider/provider.dart';
 
@@ -14,10 +15,31 @@ class MemoDetailPage extends StatefulWidget {
 
 class _MemoDetailPageState extends State<MemoDetailPage> {
   bool _editing = false;
+  Memo? memo;
+  @override
+  void initState() {
+    // use context in initState
+    () async {
+      await Future.delayed(Duration.zero);
+      final id = ModalRoute.of(context)!.settings.arguments;
+      if (id != null) {
+        setState(() {
+          memo = Provider.of<Memos>(context, listen: false)
+              .getItemById(id as String);
+        });
+      } else {
+        setState(() {
+          memo = Memo(title: '', content: '', userId: 'dummy');
+          _editing = true;
+        });
+      }
+    }();
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final id = ModalRoute.of(context)!.settings.arguments as String;
-    final memo = Provider.of<Memos>(context).getItemById(id);
     return Scaffold(
       appBar: AppBar(
         title: Text(memo?.title ?? 'Not found'),
@@ -34,15 +56,21 @@ class _MemoDetailPageState extends State<MemoDetailPage> {
               child: Text('Memo not found.'),
             )
           : _editing
-              ? MemoEditor(memo: memo)
-              : MemoRendered(memo: memo),
+              ? MemoEditor(memo: memo!)
+              : MemoRendered(memo: memo!),
       floatingActionButton: memo == null
           ? null
           : FloatingActionButton(
               onPressed: () async {
                 if (_editing) {
                   try {
-                    await memo.save();
+                    final isNewMemo = memo!.id == null;
+                    await memo!.save();
+                    if (isNewMemo) {
+                      Provider.of<Memos>(context, listen: false).addItem(memo!);
+                    } else {
+                      Provider.of<Memos>(context, listen: false).notify();
+                    }
                   } catch (e) {
                     print(Text(e.toString()));
                     ScaffoldMessenger.of(context).showSnackBar(

@@ -21,6 +21,15 @@ class Memos extends ChangeNotifier {
     return _items.firstWhere((element) => element.id == id);
   }
 
+  void addItem(Memo memo) {
+    _items.insert(0, memo);
+    notifyListeners();
+  }
+
+  void notify() {
+    notifyListeners();
+  }
+
   Future<void> fetchFirstItems() async {
     _items.clear();
     if (kIsWeb || !Platform.isWindows) {

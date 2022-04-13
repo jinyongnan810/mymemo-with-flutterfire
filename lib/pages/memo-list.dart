@@ -13,8 +13,10 @@ class MemoListPage extends StatelessWidget {
       ),
       body: const MemoList(),
       floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.edit),
-        onPressed: () {},
+        child: const Icon(Icons.add),
+        onPressed: () {
+          Navigator.of(context).pushNamed('/detail');
+        },
       ),
     );
   }
