@@ -54,6 +54,9 @@ class _MemoEditorState extends State<MemoEditor> {
       Center(
           child: TextField(
         controller: _titleEditor,
+        decoration: const InputDecoration(
+          hintText: 'Enter title',
+        ),
         textAlign: TextAlign.center,
       )),
       Expanded(
@@ -66,6 +69,9 @@ class _MemoEditorState extends State<MemoEditor> {
               keyboardType: TextInputType.multiline,
               maxLines: null,
               controller: _contentEditor,
+              decoration: const InputDecoration(
+                hintText: 'Enter contents in Markdown',
+              ),
             ),
             secondChild: Markdown(
               extensionSet: MarkdownExtensionSet.githubWeb.value,
