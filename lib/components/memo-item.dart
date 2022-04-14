@@ -13,7 +13,22 @@ class MemoItem extends StatelessWidget {
       borderRadius: BorderRadius.circular(10),
       onTap: () => Navigator.of(context)
           .pushNamed(MemoDetailPage.routeName, arguments: memo.id),
-      child: Text(memo.title),
+      child: Stack(
+        children: [
+          Center(
+            child: Text(memo.title),
+          ),
+          Container(
+            alignment: Alignment.topRight,
+            child: IconButton(
+                onPressed: () {},
+                icon: const Icon(
+                  Icons.close,
+                  color: Colors.grey,
+                )),
+          )
+        ],
+      ),
     );
   }
 }
