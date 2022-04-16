@@ -26,6 +26,11 @@ class Memos extends ChangeNotifier {
     notifyListeners();
   }
 
+  void deleteItem(Memo memo) {
+    _items.removeWhere((item) => item.id == memo.id);
+    notifyListeners();
+  }
+
   void notify() {
     notifyListeners();
   }
