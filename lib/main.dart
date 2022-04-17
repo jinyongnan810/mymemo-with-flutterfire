@@ -10,6 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:mymemo_with_flutterfire/components/memo-list.dart';
 import 'package:mymemo_with_flutterfire/pages/memo-detail.dart';
 import 'package:mymemo_with_flutterfire/pages/memo-list.dart';
+import 'package:mymemo_with_flutterfire/providers/auth.dart';
 import 'package:mymemo_with_flutterfire/providers/memos.dart';
 import 'dart:convert';
 import 'package:provider/provider.dart';
@@ -41,7 +42,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-        providers: [ChangeNotifierProvider(create: (ctx) => Memos())],
+        providers: [
+          ChangeNotifierProvider(create: (ctx) => Memos()),
+          ChangeNotifierProvider(create: (ctx) => Auth())
+        ],
         child: MaterialApp(
           title: 'Flutter Demo',
           theme: ThemeData(
