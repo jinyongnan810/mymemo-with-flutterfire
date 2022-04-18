@@ -10,18 +10,26 @@ class Auth extends ChangeNotifier {
     GoogleAuthProvider googleProvider = GoogleAuthProvider();
     // googleProvider
     //     .addScope('https://www.googleapis.com/auth/contacts.readonly');
-    final googleUserCredential =
-        await FirebaseAuth.instance.signInWithPopup(googleProvider);
-    userId = googleUserCredential.user?.uid ?? '';
-    if (userId != '') signedIn = true;
-    print('userId:$userId, signedIn:$signedIn');
-    notifyListeners();
+    await FirebaseAuth.instance.signInWithPopup(googleProvider);
   }
 
   Future<void> signOut() async {
     await FirebaseAuth.instance.signOut();
-    signedIn = false;
-    userId = '';
-    notifyListeners();
+  }
+
+  void watch() {
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      if (user == null) {
+        signedIn = false;
+        userId = '';
+        notifyListeners();
+        print('User is currently signed out!');
+      } else {
+        userId = user.uid;
+        signedIn = true;
+        notifyListeners();
+        print('User is signed in!');
+      }
+    });
   }
 }
