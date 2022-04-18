@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mymemo_with_flutterfire/components/memo-editor.dart';
 import 'package:mymemo_with_flutterfire/components/memo-rendered.dart';
 import 'package:mymemo_with_flutterfire/models/memo.dart';
+import 'package:mymemo_with_flutterfire/providers/auth.dart';
 import 'package:mymemo_with_flutterfire/providers/memos.dart';
 import 'package:provider/provider.dart';
 
@@ -28,10 +29,13 @@ class _MemoDetailPageState extends State<MemoDetailPage> {
               .getItemById(id as String);
         });
       } else {
-        setState(() {
-          memo = Memo(title: '', content: '', userId: 'dummy');
-          _editing = true;
-        });
+        final auth = Provider.of<Auth>(context, listen: false);
+        if (auth.signedIn) {
+          setState(() {
+            memo = Memo(title: '', content: '', userId: auth.userId);
+            _editing = true;
+          });
+        }
       }
     }();
 
@@ -58,7 +62,8 @@ class _MemoDetailPageState extends State<MemoDetailPage> {
           : _editing
               ? MemoEditor(memo: memo!)
               : MemoRendered(memo: memo!),
-      floatingActionButton: memo == null
+      floatingActionButton: (memo == null ||
+              !Provider.of<Auth>(context, listen: false).signedIn)
           ? null
           : FloatingActionButton(
               onPressed: () async {
