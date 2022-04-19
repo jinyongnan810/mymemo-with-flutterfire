@@ -44,6 +44,7 @@ class _MemoDetailPageState extends State<MemoDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    final auth = Provider.of<Auth>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: Text(memo?.title ?? 'Not found'),
@@ -63,7 +64,8 @@ class _MemoDetailPageState extends State<MemoDetailPage> {
               ? MemoEditor(memo: memo!)
               : MemoRendered(memo: memo!),
       floatingActionButton: (memo == null ||
-              !Provider.of<Auth>(context, listen: false).signedIn)
+              !auth.signedIn ||
+              memo!.userId != auth.userId)
           ? null
           : FloatingActionButton(
               onPressed: () async {
