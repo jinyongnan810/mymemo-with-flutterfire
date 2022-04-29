@@ -22,43 +22,45 @@ class MemoItem extends StatelessWidget {
           Center(
             child: Text(memo.title),
           ),
-          auth.signedIn && memo.userId == auth.userId
-              ? Container(
-                  alignment: Alignment.topRight,
-                  child: IconButton(
-                      onPressed: () async {
-                        final confirmed = await showDialog(
-                            context: context,
-                            builder: (_) => AlertDialog(
-                                  title: Text(
-                                      'Are you sure to delete ${memo.title}'),
-                                  content: const Text(
-                                      'This action cannot be undone.'),
-                                  actions: [
-                                    TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop(false);
-                                        },
-                                        child: const Text('Cancel')),
-                                    TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop(true);
-                                        },
-                                        child: const Text('Delete')),
-                                  ],
-                                ));
-                        if (confirmed == true) {
-                          await memo.delete();
-                          Provider.of<Memos>(context, listen: false)
-                              .deleteItem(memo);
-                        }
-                      },
-                      icon: const Icon(
-                        Icons.close,
-                        color: Colors.grey,
-                      )),
-                )
-              : Container()
+          Consumer<Auth>(builder: ((context, auth, child) {
+            return auth.signedIn && memo.userId == auth.userId
+                ? Container(
+                    alignment: Alignment.topRight,
+                    child: IconButton(
+                        onPressed: () async {
+                          final confirmed = await showDialog(
+                              context: context,
+                              builder: (_) => AlertDialog(
+                                    title: Text(
+                                        'Are you sure to delete ${memo.title}'),
+                                    content: const Text(
+                                        'This action cannot be undone.'),
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop(false);
+                                          },
+                                          child: const Text('Cancel')),
+                                      TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop(true);
+                                          },
+                                          child: const Text('Delete')),
+                                    ],
+                                  ));
+                          if (confirmed == true) {
+                            await memo.delete();
+                            Provider.of<Memos>(context, listen: false)
+                                .deleteItem(memo);
+                          }
+                        },
+                        icon: const Icon(
+                          Icons.close,
+                          color: Colors.grey,
+                        )),
+                  )
+                : Container();
+          }))
         ],
       ),
     );

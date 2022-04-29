@@ -20,3 +20,11 @@ service cloud.firestore {
 ## Limitations
 
 - Not able to sign in at windows desktop
+
+## Todos
+
+- open links in markdown
+- get email&profile from userId
+- shortcut
+- upload images
+- find memos
