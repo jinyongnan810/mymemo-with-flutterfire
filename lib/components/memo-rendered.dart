@@ -4,6 +4,7 @@ import 'package:mymemo_with_flutterfire/components/code-builder.dart';
 import 'package:mymemo_with_flutterfire/components/header-builder.dart';
 import 'package:mymemo_with_flutterfire/models/memo.dart';
 import 'package:mymemo_with_flutterfire/shared/markdown_extensions.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class MemoRendered extends StatelessWidget {
   final Memo memo;
@@ -14,6 +15,9 @@ class MemoRendered extends StatelessWidget {
     return Markdown(
       extensionSet: MarkdownExtensionSet.githubWeb.value,
       data: memo.content,
+      onTapLink: (text, url, title) {
+        url != null ? launchUrlString(url) : null;
+      },
       builders: {
         'code': CodeBuilder(),
         'h1': CenteredHeaderBuilder(),

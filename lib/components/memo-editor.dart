@@ -5,6 +5,7 @@ import 'package:mymemo_with_flutterfire/models/memo.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:mymemo_with_flutterfire/shared/markdown_extensions.dart';
 import 'package:mymemo_with_flutterfire/shared/split.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class MemoEditor extends StatefulWidget {
   final Memo memo;
@@ -76,6 +77,9 @@ class _MemoEditorState extends State<MemoEditor> {
             secondChild: Markdown(
               extensionSet: MarkdownExtensionSet.githubWeb.value,
               data: _content,
+              onTapLink: (text, url, title) {
+                url != null ? launchUrlString(url) : null;
+              },
               builders: {
                 'code': CodeBuilder(),
                 'h1': CenteredHeaderBuilder(),

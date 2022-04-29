@@ -23,7 +23,7 @@ service cloud.firestore {
 
 ## Todos
 
-- open links in markdown
+- display images from difference domain
 - get email&profile from userId
 - shortcut
 - upload images
