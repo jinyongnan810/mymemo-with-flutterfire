@@ -20,11 +20,21 @@ service cloud.firestore {
 ## Limitations
 
 - Not able to sign in at windows desktop
+- `.env` must be renamed as `env` to prevent deployment error
+
+## Deployment to Firebase hosting
+
+- `firebase deploy`
 
 ## Todos
 
-- display images from difference domain
+- change domain
+- github workflow
+- support for backticks
 - get email&profile from userId
 - shortcut
 - upload images
 - find memos
+- constraints
+- search in app bar, sliver app bar
+  - https://www.youtube.com/watch?v=TlbbIQykHK0

@@ -9,14 +9,14 @@ import 'package:mymemo_with_flutterfire/providers/memos.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main() async {
-  await dotenv.load(fileName: ".env");
+  await dotenv.load(fileName: "env");
   await Firebase.initializeApp(
       options: FirebaseOptions(
-    apiKey: dotenv.env['API_KEY']!,
-    authDomain: dotenv.env['AUTH_DOMAIN']!,
-    projectId: dotenv.env['PROJECT_ID']!,
-    messagingSenderId: dotenv.env['MESSAGING_SENDER_ID']!,
-    appId: dotenv.env['APP_ID']!,
+    apiKey: dotenv.env['API_KEY'] ?? '',
+    authDomain: dotenv.env['AUTH_DOMAIN'] ?? '',
+    projectId: dotenv.env['PROJECT_ID'] ?? '',
+    messagingSenderId: dotenv.env['MESSAGING_SENDER_ID'] ?? '',
+    appId: dotenv.env['APP_ID'] ?? '',
   ));
   runApp(const MyApp());
 }
