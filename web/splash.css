@@ -1,0 +1,13 @@
+.logo{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgb(2,0,36);
+    /* https://cssgradient.io/ */
+    background: linear-gradient(135deg, rgba(2,0,36,1) 0%, rgba(116,9,121,1) 50%, rgba(0,134,255,1) 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

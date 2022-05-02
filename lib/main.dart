@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(create: (ctx) => auth)
         ],
         child: MaterialApp(
-          title: 'Flutter Demo',
+          title: "Kin's Page",
           theme: ThemeData(
             primarySwatch: Colors.deepPurple,
           ),
