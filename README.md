@@ -13,6 +13,13 @@ service cloud.firestore {
       allow create: if
       		request.auth != null
     }
+    match /users/{user} {
+    	allow read: if true;
+      allow update, delete: if
+      		request.auth != null && request.auth.uid == resource.id;
+      allow create: if
+      		request.auth != null
+    }
   }
 }
 ```
