@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mymemo_with_flutterfire/models/memo.dart';
 import 'package:mymemo_with_flutterfire/models/profile.dart';
 import 'package:mymemo_with_flutterfire/pages/memo-detail.dart';
@@ -13,6 +14,10 @@ class MemoItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<Auth>(context, listen: false);
+    final updatedAt = DateTime.fromMillisecondsSinceEpoch(memo.updatedAt!);
+    final fullDate = DateFormat('yyyy/MM/dd H:m').format(updatedAt);
+    final shortDate = DateFormat('MM/dd H:m').format(updatedAt);
+    final date = (updatedAt.year == DateTime.now().year) ? shortDate : fullDate;
     return InkWell(
       highlightColor: Theme.of(context).primaryColor,
       borderRadius: BorderRadius.circular(10),
@@ -23,6 +28,16 @@ class MemoItem extends StatelessWidget {
           Center(
             child: Text(memo.title),
           ),
+          Container(
+              alignment: Alignment.bottomLeft,
+              padding: const EdgeInsets.only(bottom: 10, left: 10),
+              child: Tooltip(
+                child: Text(
+                  date,
+                  style: const TextStyle(fontSize: 12),
+                ),
+                message: 'Updated at $fullDate',
+              )),
           Container(
               padding: const EdgeInsets.only(left: 10, top: 10),
               alignment: Alignment.topLeft,
