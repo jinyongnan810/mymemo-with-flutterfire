@@ -31,24 +31,30 @@ class MemoItem extends StatelessWidget {
                 builder: (ctx, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
                     final photo = snapshot.data!.photoUrl;
-                    return Row(
-                      children: [
-                        photo == ''
-                            ? const CircleAvatar(
-                                radius: 15, child: const Icon(Icons.person))
-                            : CircleAvatar(
-                                radius: 15,
-                                backgroundImage:
-                                    NetworkImage(snapshot.data!.photoUrl),
-                              ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Text(snapshot.data!.displayName)
-                      ],
+                    return Tooltip(
+                      child: Row(
+                        children: [
+                          photo == ''
+                              ? const CircleAvatar(
+                                  radius: 15, child: Icon(Icons.person))
+                              : CircleAvatar(
+                                  radius: 15,
+                                  backgroundImage:
+                                      NetworkImage(snapshot.data!.photoUrl),
+                                ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Text(snapshot.data!.displayName)
+                        ],
+                      ),
+                      message: snapshot.data!.email,
                     );
                   }
-                  return const CircularProgressIndicator();
+                  return const Tooltip(
+                    child: CircularProgressIndicator(),
+                    message: 'Loading Profile...',
+                  );
                 },
               )),
           Consumer<Auth>(builder: ((context, auth, child) {

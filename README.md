@@ -31,17 +31,20 @@ service cloud.firestore {
 
 ## Deployment to Firebase hosting
 
-- `firebase deploy`
+```
+flutter build web --release
+firebase deploy
+```
 
 ## Todos
 
 - change domain
 - github workflow
 - support for backticks
-- get email&profile from userId
 - shortcut
 - upload images
 - find memos
 - constraints
 - search in app bar, sliver app bar
   - https://www.youtube.com/watch?v=TlbbIQykHK0
+- prevent double loading when scrolling more items
