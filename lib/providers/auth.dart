@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mymemo_with_flutterfire/models/profile.dart';
 
 class Auth extends ChangeNotifier {
   bool signedIn = false;
   String userId = '';
+  Map<String, UserProfile> cachedProfile = {};
   Future<void> signIn() async {
     // https://firebase.flutter.dev/docs/auth/social/
     // not working with desktop
@@ -24,6 +26,23 @@ class Auth extends ChangeNotifier {
       'photoUrl': user.photoURL ?? '',
       'email': user.email ?? ''
     });
+  }
+
+  Future<UserProfile> getUser(String id) async {
+    if (cachedProfile.containsKey(id)) {
+      return cachedProfile[id]!;
+    }
+    final snapshot =
+        await FirebaseFirestore.instance.collection('users').doc(id).get();
+    if (snapshot.exists) {
+      final user = UserProfile.fromJson(id, snapshot.data()!);
+      cachedProfile[id] = user;
+      return user;
+    } else {
+      final user = UserProfile(id, 'User Not Found', '', '');
+      cachedProfile[id] = user;
+      return user;
+    }
   }
 
   Future<void> signOut() async {

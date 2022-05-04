@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mymemo_with_flutterfire/models/memo.dart';
+import 'package:mymemo_with_flutterfire/models/profile.dart';
 import 'package:mymemo_with_flutterfire/pages/memo-detail.dart';
 import 'package:mymemo_with_flutterfire/providers/auth.dart';
 import 'package:mymemo_with_flutterfire/providers/memos.dart';
@@ -22,6 +23,34 @@ class MemoItem extends StatelessWidget {
           Center(
             child: Text(memo.title),
           ),
+          Container(
+              padding: const EdgeInsets.only(left: 10, top: 10),
+              alignment: Alignment.topLeft,
+              child: FutureBuilder<UserProfile>(
+                future: auth.getUser(memo.userId),
+                builder: (ctx, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    final photo = snapshot.data!.photoUrl;
+                    return Row(
+                      children: [
+                        photo == ''
+                            ? const CircleAvatar(
+                                radius: 15, child: const Icon(Icons.person))
+                            : CircleAvatar(
+                                radius: 15,
+                                backgroundImage:
+                                    NetworkImage(snapshot.data!.photoUrl),
+                              ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Text(snapshot.data!.displayName)
+                      ],
+                    );
+                  }
+                  return const CircularProgressIndicator();
+                },
+              )),
           Consumer<Auth>(builder: ((context, auth, child) {
             return auth.signedIn && memo.userId == auth.userId
                 ? Container(
