@@ -63,13 +63,21 @@ class _MemoListState extends State<MemoList> {
             return Consumer<Memos>(
                 builder: (ctx, memos, _) => Column(
                       children: [
-                        Expanded(
-                            child: GridView.count(
-                          crossAxisCount: 4,
-                          controller: _scrollController,
-                          children: [
-                            ...memos.items.map((memo) => MemoItem(memo))
-                          ],
+                        Expanded(child: LayoutBuilder(
+                          builder: ((context, constraints) {
+                            int cols = constraints.maxWidth > 1200
+                                ? 4
+                                : constraints.maxWidth > 600
+                                    ? 3
+                                    : 2;
+                            return GridView.count(
+                              crossAxisCount: cols,
+                              controller: _scrollController,
+                              children: [
+                                ...memos.items.map((memo) => MemoItem(memo))
+                              ],
+                            );
+                          }),
                         )),
                         if (_loadingMore)
                           const Padding(
