@@ -23,4 +23,3 @@ firebase deploy --only=hosting
 - constraints
 - search in app bar, sliver app bar
   - https://www.youtube.com/watch?v=TlbbIQykHK0
-- prevent double loading when scrolling more items

@@ -24,6 +24,7 @@ class _MemoListState extends State<MemoList> {
     _scrollController.addListener(() async {
       if (_scrollController.offset ==
           _scrollController.position.maxScrollExtent) {
+        if (_loadingMore) return;
         setState(() {
           _loadingMore = true;
         });
