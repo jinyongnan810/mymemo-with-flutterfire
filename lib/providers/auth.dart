@@ -6,6 +6,7 @@ import 'package:mymemo_with_flutterfire/models/profile.dart';
 class Auth extends ChangeNotifier {
   bool signedIn = false;
   String userId = '';
+  UserProfile myProfile = UserProfile('', '', '', '');
   Map<String, UserProfile> cachedProfile = {};
   Future<void> signIn() async {
     // https://firebase.flutter.dev/docs/auth/social/
@@ -26,6 +27,8 @@ class Auth extends ChangeNotifier {
       'photoUrl': user.photoURL ?? '',
       'email': user.email ?? ''
     });
+    cachedProfile[user.uid] = UserProfile(user.uid, user.displayName ?? '',
+        user.photoURL ?? '', user.email ?? '');
   }
 
   Future<UserProfile> getUser(String id) async {
@@ -54,10 +57,13 @@ class Auth extends ChangeNotifier {
       if (user == null) {
         signedIn = false;
         userId = '';
+        myProfile = UserProfile('', '', '', '');
         notifyListeners();
         print('User is currently signed out!');
       } else {
         userId = user.uid;
+        myProfile = UserProfile(user.uid, user.displayName ?? '',
+            user.photoURL ?? '', user.email ?? '');
         await updateUser(user);
         signedIn = true;
         notifyListeners();

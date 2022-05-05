@@ -18,24 +18,34 @@ class MemoListPage extends StatelessWidget {
             kIsWeb
                 ? Consumer<Auth>(
                     builder: (ctx, auth, _) => auth.signedIn
-                        ? TextButton(
-                            onPressed: () async {
-                              await auth.signOut();
-                            },
-                            child: const Text(
-                              'Sign out',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 16),
-                            ))
-                        : TextButton(
-                            onPressed: () async {
-                              await auth.signIn();
-                            },
-                            child: const Text(
-                              'Sign in',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 16),
-                            )))
+                        ? Tooltip(
+                            child: InkWell(
+                              onTap: () async {
+                                await auth.signOut();
+                              },
+                              child: Padding(
+                                  padding: const EdgeInsets.only(right: 10),
+                                  child: CircleAvatar(
+                                    radius: 20,
+                                    // in Appbar, ragular background image won't fit
+                                    // this way worked
+                                    child: ClipOval(
+                                        child: Image.network(
+                                      auth.myProfile.photoUrl,
+                                    )),
+                                  )),
+                            ),
+                            message:
+                                'Signed in with ${auth.myProfile.email}. Click to sign out.',
+                          )
+                        : Tooltip(
+                            child: IconButton(
+                                onPressed: () async {
+                                  await auth.signIn();
+                                },
+                                icon: const Icon(Icons.person)),
+                            message: 'Sign in',
+                          ))
                 : Container()
           ],
         ),
