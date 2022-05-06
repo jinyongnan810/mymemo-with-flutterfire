@@ -35,9 +35,7 @@ class MyApp extends StatelessWidget {
         ],
         child: MaterialApp(
           title: "Kin's Page",
-          theme: ThemeData(
-            primarySwatch: Colors.deepPurple,
-          ),
+          theme: ThemeData.dark(),
           routes: {
             '/': (ctx) => const MemoListPage(),
             '/detail': (ctx) => const MemoDetailPage()

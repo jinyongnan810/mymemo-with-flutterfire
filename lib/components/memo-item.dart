@@ -26,7 +26,10 @@ class MemoItem extends StatelessWidget {
       child: Stack(
         children: [
           Center(
-            child: Text(memo.title),
+            child: Text(
+              memo.title,
+              style: const TextStyle(fontSize: 30),
+            ),
           ),
           Container(
               alignment: Alignment.bottomLeft,

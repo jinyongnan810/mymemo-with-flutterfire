@@ -45,58 +45,83 @@ class _MemoDetailPageState extends State<MemoDetailPage> {
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<Auth>(context, listen: false);
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(memo?.title ?? 'Not found'),
-        // leading: Builder(
-        //   builder: ((context) => IconButton(
-        //       onPressed: () {
-        //         Navigator.of(context).pushReplacementNamed('/');
-        //       },
-        //       icon: const Icon(Icons.home))),
-        // ),
-      ),
-      body: memo == null
-          ? const Center(
-              child: Text('Memo not found.'),
-            )
-          : _editing
-              ? MemoEditor(memo: memo!)
-              : MemoRendered(memo: memo!),
-      floatingActionButton: (memo == null ||
-              !auth.signedIn ||
-              memo!.userId != auth.userId)
-          ? null
-          : FloatingActionButton(
-              onPressed: () async {
-                if (_editing) {
-                  try {
-                    final isNewMemo = memo!.id == null;
-                    await memo!.save();
-                    if (isNewMemo) {
-                      Provider.of<Memos>(context, listen: false).addItem(memo!);
-                    } else {
-                      Provider.of<Memos>(context, listen: false).notify();
-                    }
-                  } catch (e) {
-                    print(Text(e.toString()));
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Error saving memo.')));
-                    return;
-                  }
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Memo saved.')));
-                  setState(() {
-                    _editing = false;
-                  });
-                } else {
-                  setState(() {
-                    _editing = true;
-                  });
-                }
-              },
-              child: _editing ? const Icon(Icons.save) : const Icon(Icons.edit),
-            ),
-    );
+    return Container(
+        decoration: const BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Colors.purple, Colors.orange])),
+        child: Scaffold(
+          extendBodyBehindAppBar: true,
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            title: Text(memo?.title ?? 'Not found'),
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            // leading: Builder(
+            //   builder: ((context) => IconButton(
+            //       onPressed: () {
+            //         Navigator.of(context).pushReplacementNamed('/');
+            //       },
+            //       icon: const Icon(Icons.home))),
+            // ),
+          ),
+          body: memo == null
+              ? const Center(
+                  child: Text('Memo not found.'),
+                )
+              : _editing
+                  ? MemoEditor(memo: memo!)
+                  : MemoRendered(memo: memo!),
+          floatingActionButton: (memo == null ||
+                  !auth.signedIn ||
+                  memo!.userId != auth.userId)
+              ? null
+              : Container(
+                  decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [Colors.purple, Colors.orange]),
+                      borderRadius: BorderRadius.circular(30)),
+                  child: FloatingActionButton(
+                    backgroundColor: Colors.transparent,
+                    foregroundColor: Colors.white,
+                    elevation: 0,
+                    onPressed: () async {
+                      if (_editing) {
+                        try {
+                          final isNewMemo = memo!.id == null;
+                          await memo!.save();
+                          if (isNewMemo) {
+                            Provider.of<Memos>(context, listen: false)
+                                .addItem(memo!);
+                          } else {
+                            Provider.of<Memos>(context, listen: false).notify();
+                          }
+                        } catch (e) {
+                          print(Text(e.toString()));
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('Error saving memo.')));
+                          return;
+                        }
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Memo saved.')));
+                        setState(() {
+                          _editing = false;
+                        });
+                      } else {
+                        setState(() {
+                          _editing = true;
+                        });
+                      }
+                    },
+                    child: _editing
+                        ? const Icon(Icons.save)
+                        : const Icon(Icons.edit),
+                  ),
+                ),
+        ));
   }
 }
