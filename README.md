@@ -14,12 +14,12 @@ firebase deploy --only=hosting
 
 ## Todos
 
-- change domain
 - github workflow
 - support for backticks
 - shortcut
 - upload images
 - find memos
-- constraints
 - search in app bar, sliver app bar
   - https://www.youtube.com/watch?v=TlbbIQykHK0
+- fix scroll in mobile devices
+- make a vertical version of the split widget

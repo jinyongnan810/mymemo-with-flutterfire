@@ -13,41 +13,40 @@ class MemoListPage extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: const Text("Kin's Page"),
-          actions: [
-            // currently only supports web
-            kIsWeb
-                ? Consumer<Auth>(
-                    builder: (ctx, auth, _) => auth.signedIn
-                        ? Tooltip(
-                            child: InkWell(
-                              onTap: () async {
-                                await auth.signOut();
-                              },
-                              child: Padding(
-                                  padding: const EdgeInsets.only(right: 10),
-                                  child: CircleAvatar(
-                                    radius: 20,
-                                    // in Appbar, ragular background image won't fit
-                                    // this way worked
-                                    child: ClipOval(
-                                        child: Image.network(
-                                      auth.myProfile.photoUrl,
-                                    )),
-                                  )),
-                            ),
-                            message:
-                                'Signed in with ${auth.myProfile.email}. Click to sign out.',
-                          )
-                        : Tooltip(
-                            child: IconButton(
-                                onPressed: () async {
-                                  await auth.signIn();
+          leading:
+              // currently only supports web
+              kIsWeb
+                  ? Consumer<Auth>(
+                      builder: (ctx, auth, _) => auth.signedIn
+                          ? Tooltip(
+                              child: InkWell(
+                                onTap: () async {
+                                  await auth.signOut();
                                 },
-                                icon: const Icon(Icons.person)),
-                            message: 'Sign in',
-                          ))
-                : Container()
-          ],
+                                child: Padding(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: CircleAvatar(
+                                      radius: 20,
+                                      // in Appbar, ragular background image won't fit
+                                      // this way worked
+                                      child: ClipOval(
+                                          child: Image.network(
+                                        auth.myProfile.photoUrl,
+                                      )),
+                                    )),
+                              ),
+                              message:
+                                  'Signed in with ${auth.myProfile.email}. Click to sign out.',
+                            )
+                          : Tooltip(
+                              child: IconButton(
+                                  onPressed: () async {
+                                    await auth.signIn();
+                                  },
+                                  icon: const Icon(Icons.person)),
+                              message: 'Sign in',
+                            ))
+                  : Container(),
         ),
         body: const MemoList(),
         floatingActionButton: kIsWeb
