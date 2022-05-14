@@ -13,7 +13,9 @@ class MemoRendered extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Markdown(
-      extensionSet: MarkdownExtensionSet.githubWeb.value,
+      // extensionSet: MarkdownExtensionSet.githubWeb.value,
+      styleSheet: MarkdownStyleSheet.fromTheme(
+          Theme.of(context).copyWith(cardColor: Colors.transparent)),
       data: memo.content,
       onTapLink: (text, url, title) {
         url != null ? launchUrlString(url) : null;

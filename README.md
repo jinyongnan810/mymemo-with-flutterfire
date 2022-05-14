@@ -4,6 +4,7 @@
 
 - Not able to sign in at windows desktop
 - `.env` must be renamed as `env` to prevent deployment error
+- backticks create a blocked code
 
 ## Deployment to Firebase hosting
 
