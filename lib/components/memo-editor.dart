@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mymemo_with_flutterfire/components/code-builder.dart';
 import 'package:mymemo_with_flutterfire/components/header-builder.dart';
 import 'package:mymemo_with_flutterfire/models/memo.dart';
@@ -6,6 +7,30 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:mymemo_with_flutterfire/shared/markdown_extensions.dart';
 import 'package:mymemo_with_flutterfire/shared/split.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+
+class MakeLinkIntent extends Intent {
+  const MakeLinkIntent();
+}
+
+class MakeLinkAction extends Action<MakeLinkIntent> {
+  final TextEditingController controller;
+  MakeLinkAction(this.controller);
+  @override
+  void invoke(MakeLinkIntent intent) {
+    final subString = controller.text.substring(
+        controller.selection.baseOffset, controller.selection.extentOffset);
+    final replaceString = '[$subString]()';
+    final baseOffset = controller.selection.baseOffset;
+    controller.text = controller.text.replaceRange(
+        controller.selection.baseOffset,
+        controller.selection.extentOffset,
+        replaceString);
+    final newOffset = subString.isEmpty
+        ? baseOffset + replaceString.length - 3
+        : baseOffset + replaceString.length - 1;
+    controller.selection = TextSelection.collapsed(offset: newOffset);
+  }
+}
 
 class MemoEditor extends StatefulWidget {
   final Memo memo;
@@ -51,46 +76,57 @@ class _MemoEditorState extends State<MemoEditor> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      Center(
-          child: TextField(
-        controller: _titleEditor,
-        decoration: const InputDecoration(
-          hintText: 'Enter title',
-        ),
-        textAlign: TextAlign.center,
-      )),
-      Expanded(
-          child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-        child: Split(
-            axis: Axis.horizontal,
-            initialFirstFraction: 0.5,
-            firstChild: TextField(
-              keyboardType: TextInputType.multiline,
-              maxLines: null,
-              controller: _contentEditor,
-              decoration: const InputDecoration(
-                hintText: 'Enter contents in Markdown',
-              ),
-            ),
-            secondChild: Markdown(
-              extensionSet: MarkdownExtensionSet.githubWeb.value,
-              data: _content,
-              onTapLink: (text, url, title) {
-                url != null ? launchUrlString(url) : null;
-              },
-              builders: {
-                'code': CodeBuilder(),
-                'h1': CenteredHeaderBuilder(),
-                'h2': CenteredHeaderBuilder(),
-                'h3': CenteredHeaderBuilder(),
-                'h4': CenteredHeaderBuilder(),
-                'h5': CenteredHeaderBuilder(),
-                'h6': CenteredHeaderBuilder(),
-              },
-            )),
-      ))
-    ]);
+    return Shortcuts(
+        shortcuts: {
+          LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyL):
+              const MakeLinkIntent(),
+        },
+        child: Actions(
+            dispatcher: const ActionDispatcher(),
+            actions: {
+              MakeLinkIntent: MakeLinkAction(_contentEditor),
+            },
+            child: Column(children: [
+              Center(
+                  child: TextField(
+                controller: _titleEditor,
+                decoration: const InputDecoration(
+                  hintText: 'Enter title',
+                ),
+                textAlign: TextAlign.center,
+              )),
+              Expanded(
+                  child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                child: Split(
+                    axis: Axis.horizontal,
+                    initialFirstFraction: 0.5,
+                    firstChild: TextField(
+                      keyboardType: TextInputType.multiline,
+                      maxLines: null,
+                      controller: _contentEditor,
+                      decoration: const InputDecoration(
+                        hintText: 'Enter contents in Markdown',
+                      ),
+                    ),
+                    secondChild: Markdown(
+                      extensionSet: MarkdownExtensionSet.githubWeb.value,
+                      data: _content,
+                      onTapLink: (text, url, title) {
+                        url != null ? launchUrlString(url) : null;
+                      },
+                      builders: {
+                        'code': CodeBuilder(),
+                        'h1': CenteredHeaderBuilder(),
+                        'h2': CenteredHeaderBuilder(),
+                        'h3': CenteredHeaderBuilder(),
+                        'h4': CenteredHeaderBuilder(),
+                        'h5': CenteredHeaderBuilder(),
+                        'h6': CenteredHeaderBuilder(),
+                      },
+                    )),
+              ))
+            ])));
   }
 }

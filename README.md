@@ -11,13 +11,13 @@
 ```
 flutter build web --release
 firebase deploy --only=hosting
+
 ```
 
 ## Todos
 
 - github workflow
 - support for backticks
-- shortcut
 - upload images
 - find memos
 - search in app bar, sliver app bar
