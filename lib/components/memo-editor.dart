@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mymemo_with_flutterfire/components/code-builder.dart';
 import 'package:mymemo_with_flutterfire/components/header-builder.dart';
+import 'package:mymemo_with_flutterfire/components/memo-rendered.dart';
 import 'package:mymemo_with_flutterfire/models/memo.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:mymemo_with_flutterfire/shared/markdown_extensions.dart';
@@ -110,21 +111,9 @@ class _MemoEditorState extends State<MemoEditor> {
                         hintText: 'Enter contents in Markdown',
                       ),
                     ),
-                    secondChild: Markdown(
-                      extensionSet: MarkdownExtensionSet.githubWeb.value,
-                      data: _content,
-                      onTapLink: (text, url, title) {
-                        url != null ? launchUrlString(url) : null;
-                      },
-                      builders: {
-                        'code': CodeBuilder(),
-                        'h1': CenteredHeaderBuilder(),
-                        'h2': CenteredHeaderBuilder(),
-                        'h3': CenteredHeaderBuilder(),
-                        'h4': CenteredHeaderBuilder(),
-                        'h5': CenteredHeaderBuilder(),
-                        'h6': CenteredHeaderBuilder(),
-                      },
+                    secondChild: MemoRendered(
+                      content: _content,
+                      withPadding: false,
                     )),
               ))
             ])));

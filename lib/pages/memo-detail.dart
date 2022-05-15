@@ -72,7 +72,7 @@ class _MemoDetailPageState extends State<MemoDetailPage> {
                 )
               : _editing
                   ? MemoEditor(memo: memo!)
-                  : MemoRendered(memo: memo!),
+                  : MemoRendered(content: memo!.content),
           floatingActionButton: (memo == null ||
                   !auth.signedIn ||
                   memo!.userId != auth.userId)

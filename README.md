@@ -16,6 +16,7 @@ firebase deploy --only=hosting
 
 ## Todos
 
+- link, img header style
 - github workflow
 - support for backticks
 - upload images
