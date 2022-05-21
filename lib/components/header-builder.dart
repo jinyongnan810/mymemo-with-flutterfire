@@ -8,7 +8,12 @@ class CenteredHeaderBuilder extends MarkdownElementBuilder {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Text(text.text, style: preferredStyle),
+        SelectableText(
+          text.text,
+          style: preferredStyle,
+          showCursor: true,
+          toolbarOptions: const ToolbarOptions(copy: true),
+        ),
       ],
     );
   }

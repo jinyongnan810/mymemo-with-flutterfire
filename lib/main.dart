@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:mymemo_with_flutterfire/navigation-service.dart';
 import 'package:mymemo_with_flutterfire/pages/memo-detail.dart';
 import 'package:mymemo_with_flutterfire/pages/memo-list.dart';
 import 'package:mymemo_with_flutterfire/providers/auth.dart';
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
         ],
         child: MaterialApp(
           title: "Kin's Page",
+          navigatorKey: NavigationService.navigatorKey,
           theme: ThemeData.dark(),
           routes: {
             '/': (ctx) => const MemoListPage(),

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_highlight/flutter_highlight.dart';
 import 'package:flutter_highlight/themes/atom-one-light.dart';
 import 'package:flutter_highlight/themes/ocean.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mymemo_with_flutterfire/navigation-service.dart';
 
 // from https://github.com/git-touch/highlight.dart
 // from https://stackoverflow.com/a/70733069
@@ -23,27 +25,38 @@ class CodeBuilder extends MarkdownElementBuilder {
             .width,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(10.0),
-          child: HighlightView(
-            // The original code to be highlighted
-            element.textContent,
+          child: GestureDetector(
+            onLongPress: () {
+              Clipboard.setData(ClipboardData(text: element.textContent));
+              ScaffoldMessenger.of(
+                      NavigationService.navigatorKey.currentContext!)
+                  .showSnackBar(const SnackBar(
+                content: Text('Code copied.'),
+                duration: Duration(seconds: 5),
+              ));
+            },
+            child: HighlightView(
+              // The original code to be highlighted
+              element.textContent,
 
-            // Specify language
-            // It is recommended to give it a value for performance
-            language: language,
+              // Specify language
+              // It is recommended to give it a value for performance
+              language: language,
 
-            // Specify highlight theme
-            // All available themes are listed in `themes` folder
-            theme: MediaQueryData.fromWindow(WidgetsBinding.instance!.window)
-                        .platformBrightness ==
-                    Brightness.light
-                ? oceanTheme
-                : atomOneLightTheme,
+              // Specify highlight theme
+              // All available themes are listed in `themes` folder
+              theme: MediaQueryData.fromWindow(WidgetsBinding.instance!.window)
+                          .platformBrightness ==
+                      Brightness.light
+                  ? oceanTheme
+                  : atomOneLightTheme,
 
-            // Specify padding
-            padding: const EdgeInsets.all(8),
+              // Specify padding
+              padding: const EdgeInsets.all(8),
 
-            // Specify text style
-            textStyle: GoogleFonts.robotoMono(),
+              // Specify text style
+              textStyle: GoogleFonts.robotoMono(),
+            ),
           ),
         ));
   }

@@ -22,6 +22,7 @@ class MemoRendered extends StatelessWidget {
         onTapLink: (text, url, title) {
           url != null ? launchUrlString(url) : null;
         },
+        selectable: true,
         builders: {
           'code': CodeBuilder(),
           'h1': CenteredHeaderBuilder(),
