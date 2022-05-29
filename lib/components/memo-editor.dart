@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mymemo_with_flutterfire/components/code-builder.dart';
@@ -75,6 +76,37 @@ class _MemoEditorState extends State<MemoEditor> {
     super.dispose();
   }
 
+  Future<void> _onPointerDown(PointerDownEvent event) async {
+    // Check if right mouse button clicked
+    if (event.kind == PointerDeviceKind.mouse &&
+        event.buttons == kSecondaryMouseButton) {
+      final overlay =
+          Overlay.of(context)?.context.findRenderObject() as RenderBox;
+      final menuItem = await showMenu<int>(
+          context: context,
+          items: [
+            const PopupMenuItem(child: Text('Copy'), value: 1),
+            const PopupMenuItem(child: Text('Cut'), value: 2),
+          ],
+          position: RelativeRect.fromSize(
+              event.position & Size(48.0, 48.0), overlay.size));
+      // Check if menu item clicked
+      switch (menuItem) {
+        case 1:
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('Copy clicket'),
+          ));
+          break;
+        case 2:
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('Cut clicked'),
+          ));
+          break;
+        default:
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Shortcuts(
@@ -104,13 +136,16 @@ class _MemoEditorState extends State<MemoEditor> {
                 child: Split(
                     axis: Axis.horizontal,
                     initialFirstFraction: 0.5,
-                    firstChild: TextField(
-                      keyboardType: TextInputType.multiline,
-                      maxLines: null,
-                      controller: _contentEditor,
-                      decoration: const InputDecoration(
-                        hintText: 'Enter contents in Markdown',
+                    firstChild: Listener(
+                      child: TextField(
+                        keyboardType: TextInputType.multiline,
+                        maxLines: null,
+                        controller: _contentEditor,
+                        decoration: const InputDecoration(
+                          hintText: 'Enter contents in Markdown',
+                        ),
                       ),
+                      onPointerDown: _onPointerDown,
                     ),
                     secondChild: MemoRendered(
                       content: _content,

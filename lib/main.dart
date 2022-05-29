@@ -8,6 +8,7 @@ import 'package:mymemo_with_flutterfire/pages/memo-list.dart';
 import 'package:mymemo_with_flutterfire/providers/auth.dart';
 import 'package:mymemo_with_flutterfire/providers/memos.dart';
 import 'package:provider/provider.dart';
+import 'dart:html';
 
 Future<void> main() async {
   await dotenv.load(fileName: "env");
@@ -19,6 +20,7 @@ Future<void> main() async {
     messagingSenderId: dotenv.env['MESSAGING_SENDER_ID'] ?? '',
     appId: dotenv.env['APP_ID'] ?? '',
   ));
+  window.document.onContextMenu.listen((evt) => evt.preventDefault());
   runApp(const MyApp());
 }
 
