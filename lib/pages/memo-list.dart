@@ -29,12 +29,22 @@ class MemoListPage extends StatelessWidget {
                     ? Consumer<Auth>(
                         builder: (ctx, auth, _) => auth.signedIn
                             ? Tooltip(
-                                child: InkWell(
-                                  onTap: () async {
-                                    await auth.signOut();
-                                  },
-                                  child: Padding(
-                                      padding: const EdgeInsets.only(left: 10),
+                                child: Padding(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: PopupMenuButton(
+                                      tooltip: auth.myProfile.email,
+                                      position: PopupMenuPosition.under,
+                                      onSelected: (value) async {
+                                        if (value == 'signOut') {
+                                          await auth.signOut();
+                                        }
+                                      },
+                                      itemBuilder: (ctx) => [
+                                        const PopupMenuItem(
+                                          child: Text('Sign out'),
+                                          value: 'signOut',
+                                        ),
+                                      ],
                                       child: CircleAvatar(
                                         radius: 20,
                                         // in Appbar, ragular background image won't fit
@@ -43,8 +53,8 @@ class MemoListPage extends StatelessWidget {
                                             child: Image.network(
                                           auth.myProfile.photoUrl,
                                         )),
-                                      )),
-                                ),
+                                      ),
+                                    )),
                                 message:
                                     'Signed in with ${auth.myProfile.email}. Click to sign out.',
                               )
