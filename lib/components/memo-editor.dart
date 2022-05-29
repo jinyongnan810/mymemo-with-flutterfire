@@ -88,14 +88,15 @@ class _MemoEditorState extends State<MemoEditor> {
               MakeLinkIntent: MakeLinkAction(_contentEditor),
             },
             child: Column(children: [
-              Center(
+              Padding(
+                  padding: const EdgeInsets.only(top: 50),
                   child: TextField(
-                controller: _titleEditor,
-                decoration: const InputDecoration(
-                  hintText: 'Enter title',
-                ),
-                textAlign: TextAlign.center,
-              )),
+                    controller: _titleEditor,
+                    decoration: const InputDecoration(
+                      hintText: 'Enter title',
+                    ),
+                    textAlign: TextAlign.center,
+                  )),
               Expanded(
                   child: Padding(
                 padding:

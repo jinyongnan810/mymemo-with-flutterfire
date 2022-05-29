@@ -20,7 +20,7 @@ class CodeBuilder extends MarkdownElementBuilder {
       language = lg.substring(9);
     }
     return SizedBox(
-        width: MediaQueryData.fromWindow(WidgetsBinding.instance!.window)
+        width: MediaQueryData.fromWindow(WidgetsBinding.instance.window)
             .size
             .width,
         child: ClipRRect(
@@ -45,7 +45,7 @@ class CodeBuilder extends MarkdownElementBuilder {
 
               // Specify highlight theme
               // All available themes are listed in `themes` folder
-              theme: MediaQueryData.fromWindow(WidgetsBinding.instance!.window)
+              theme: MediaQueryData.fromWindow(WidgetsBinding.instance.window)
                           .platformBrightness ==
                       Brightness.light
                   ? oceanTheme
