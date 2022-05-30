@@ -1,3 +1,6 @@
+import 'package:file_picker/_internal/file_picker_web.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,9 +9,12 @@ import 'package:mymemo_with_flutterfire/components/header-builder.dart';
 import 'package:mymemo_with_flutterfire/components/memo-rendered.dart';
 import 'package:mymemo_with_flutterfire/models/memo.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:mymemo_with_flutterfire/providers/auth.dart';
 import 'package:mymemo_with_flutterfire/shared/markdown_extensions.dart';
 import 'package:mymemo_with_flutterfire/shared/split.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:uuid/uuid.dart';
 
 class MakeLinkIntent extends Intent {
   const MakeLinkIntent();
@@ -85,22 +91,37 @@ class _MemoEditorState extends State<MemoEditor> {
       final menuItem = await showMenu<int>(
           context: context,
           items: [
-            const PopupMenuItem(child: Text('Copy'), value: 1),
-            const PopupMenuItem(child: Text('Cut'), value: 2),
+            const PopupMenuItem(child: Text('Upload'), value: 1),
           ],
           position: RelativeRect.fromSize(
               event.position & Size(48.0, 48.0), overlay.size));
       // Check if menu item clicked
       switch (menuItem) {
         case 1:
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('Copy clicket'),
-          ));
-          break;
-        case 2:
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('Cut clicked'),
-          ));
+          final result = await FilePicker.platform.pickFiles();
+          if (result != null) {
+            final fileBytes = result.files.first.bytes;
+            final ext = result.files.first.extension;
+            final fileName = result.files.first.name;
+            final userId = Provider.of<Auth>(context, listen: false).userId;
+            final uuid = const Uuid().v4();
+            final ref =
+                FirebaseStorage.instance.ref('uploads/$userId/$uuid.$ext');
+            try {
+              await ref.putData(
+                  fileBytes!, SettableMetadata(contentType: 'image/*'));
+              final downloadLink = await ref.getDownloadURL();
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text('Successfully uploaded $fileName'),
+              ));
+              print(downloadLink);
+            } catch (e) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text('Failed to upload $fileName'),
+              ));
+              print(e);
+            }
+          }
           break;
         default:
       }

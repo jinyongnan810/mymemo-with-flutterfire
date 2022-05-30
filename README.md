@@ -9,9 +9,11 @@
 ## Deployment to Firebase hosting
 
 ```
+firebase deploy --only firestore:rules
+firebase deploy --only storage:rules
+
 flutter build web --release
 firebase deploy --only=hosting
-
 ```
 
 ## Todos

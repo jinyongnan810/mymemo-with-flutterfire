@@ -14,12 +14,12 @@ Future<void> main() async {
   await dotenv.load(fileName: "env");
   await Firebase.initializeApp(
       options: FirebaseOptions(
-    apiKey: dotenv.env['API_KEY'] ?? '',
-    authDomain: dotenv.env['AUTH_DOMAIN'] ?? '',
-    projectId: dotenv.env['PROJECT_ID'] ?? '',
-    messagingSenderId: dotenv.env['MESSAGING_SENDER_ID'] ?? '',
-    appId: dotenv.env['APP_ID'] ?? '',
-  ));
+          apiKey: dotenv.env['API_KEY'] ?? '',
+          authDomain: dotenv.env['AUTH_DOMAIN'] ?? '',
+          projectId: dotenv.env['PROJECT_ID'] ?? '',
+          messagingSenderId: dotenv.env['MESSAGING_SENDER_ID'] ?? '',
+          appId: dotenv.env['APP_ID'] ?? '',
+          storageBucket: dotenv.env['STORAGE_BUCKET'] ?? ''));
   window.document.onContextMenu.listen((evt) => evt.preventDefault());
   runApp(const MyApp());
 }
