@@ -82,6 +82,21 @@ class _MemoEditorState extends State<MemoEditor> {
     super.dispose();
   }
 
+  void _insertImage(String url) async {
+    String subString = _contentEditor.text.substring(
+        _contentEditor.selection.baseOffset,
+        _contentEditor.selection.extentOffset);
+    if (subString.isEmpty) subString = 'image';
+    final replaceString = '![$subString]($url)';
+    final baseOffset = _contentEditor.selection.baseOffset;
+    _contentEditor.text = _contentEditor.text.replaceRange(
+        _contentEditor.selection.baseOffset,
+        _contentEditor.selection.extentOffset,
+        replaceString);
+    final newOffset = baseOffset + replaceString.length;
+    _contentEditor.selection = TextSelection.collapsed(offset: newOffset);
+  }
+
   Future<void> _onPointerDown(PointerDownEvent event) async {
     // Check if right mouse button clicked
     if (event.kind == PointerDeviceKind.mouse &&
@@ -94,7 +109,7 @@ class _MemoEditorState extends State<MemoEditor> {
             const PopupMenuItem(child: Text('Upload'), value: 1),
           ],
           position: RelativeRect.fromSize(
-              event.position & Size(48.0, 48.0), overlay.size));
+              event.position & const Size(48.0, 48.0), overlay.size));
       // Check if menu item clicked
       switch (menuItem) {
         case 1:
@@ -111,6 +126,7 @@ class _MemoEditorState extends State<MemoEditor> {
               await ref.putData(
                   fileBytes!, SettableMetadata(contentType: 'image/*'));
               final downloadLink = await ref.getDownloadURL();
+              _insertImage(downloadLink);
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 content: Text('Successfully uploaded $fileName'),
               ));
