@@ -7,6 +7,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mymemo_with_flutterfire/navigation-service.dart';
+import 'package:mymemo_with_flutterfire/shared/show-snackbar.dart';
 
 // from https://github.com/git-touch/highlight.dart
 // from https://stackoverflow.com/a/70733069
@@ -28,12 +29,7 @@ class CodeBuilder extends MarkdownElementBuilder {
           child: GestureDetector(
             onLongPress: () {
               Clipboard.setData(ClipboardData(text: element.textContent));
-              ScaffoldMessenger.of(
-                      NavigationService.navigatorKey.currentContext!)
-                  .showSnackBar(const SnackBar(
-                content: Text('Code copied.'),
-                duration: Duration(seconds: 5),
-              ));
+              showSnackBar('Code copied.');
             },
             child: HighlightView(
               // The original code to be highlighted

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:mymemo_with_flutterfire/models/memo.dart';
 import 'package:mymemo_with_flutterfire/models/profile.dart';
@@ -21,8 +22,7 @@ class MemoItem extends StatelessWidget {
     return InkWell(
       highlightColor: Theme.of(context).primaryColor,
       borderRadius: BorderRadius.circular(10),
-      onTap: () => Navigator.of(context)
-          .pushNamed(MemoDetailPage.routeName, arguments: memo.id),
+      onTap: () => GoRouter.of(context).go('/memos/${memo.id}'),
       child: Stack(
         children: [
           Center(

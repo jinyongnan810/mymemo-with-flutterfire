@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mymemo_with_flutterfire/components/memo-list.dart';
 import 'package:mymemo_with_flutterfire/providers/auth.dart';
 import 'package:provider/provider.dart';
@@ -85,7 +86,7 @@ class MemoListPage extends StatelessWidget {
                             foregroundColor: Colors.white,
                             elevation: 0,
                             onPressed: () {
-                              Navigator.of(context).pushNamed('/detail');
+                              GoRouter.of(context).go('/memos/new');
                             },
                           ),
                         )

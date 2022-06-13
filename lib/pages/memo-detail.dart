@@ -7,7 +7,8 @@ import 'package:mymemo_with_flutterfire/providers/memos.dart';
 import 'package:provider/provider.dart';
 
 class MemoDetailPage extends StatefulWidget {
-  const MemoDetailPage({Key? key}) : super(key: key);
+  final String id;
+  const MemoDetailPage({Key? key, required this.id}) : super(key: key);
   static const routeName = '/detail';
 
   @override
@@ -22,11 +23,10 @@ class _MemoDetailPageState extends State<MemoDetailPage> {
     // use context in initState
     () async {
       await Future.delayed(Duration.zero);
-      final id = ModalRoute.of(context)!.settings.arguments;
-      if (id != null) {
+      if (widget.id != 'new') {
         setState(() {
-          memo = Provider.of<Memos>(context, listen: false)
-              .getItemById(id as String);
+          memo =
+              Provider.of<Memos>(context, listen: false).getItemById(widget.id);
         });
       } else {
         final auth = Provider.of<Auth>(context, listen: false);

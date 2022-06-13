@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mymemo_with_flutterfire/models/profile.dart';
 import 'package:mymemo_with_flutterfire/navigation-service.dart';
+import 'package:mymemo_with_flutterfire/shared/show-snackbar.dart';
 
 class Auth extends ChangeNotifier {
   bool signedIn = false;
@@ -20,11 +21,7 @@ class Auth extends ChangeNotifier {
     final user = userCredential.user;
     if (user == null) return;
     await updateUser(user);
-    ScaffoldMessenger.of(NavigationService.navigatorKey.currentContext!)
-        .showSnackBar(SnackBar(
-      content: Text('Signed in with ${user.email ?? user.displayName}'),
-      duration: const Duration(seconds: 5),
-    ));
+    showSnackBar('Signed in with ${user.email ?? user.displayName}');
   }
 
   Future<void> updateUser(User user) async {
@@ -56,11 +53,7 @@ class Auth extends ChangeNotifier {
 
   Future<void> signOut() async {
     await FirebaseAuth.instance.signOut();
-    ScaffoldMessenger.of(NavigationService.navigatorKey.currentContext!)
-        .showSnackBar(const SnackBar(
-      content: Text('Signed out.'),
-      duration: Duration(seconds: 5),
-    ));
+    showSnackBar('Signed out.');
   }
 
   void watch() {

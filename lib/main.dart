@@ -2,11 +2,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mymemo_with_flutterfire/navigation-service.dart';
 import 'package:mymemo_with_flutterfire/pages/memo-detail.dart';
 import 'package:mymemo_with_flutterfire/pages/memo-list.dart';
 import 'package:mymemo_with_flutterfire/providers/auth.dart';
 import 'package:mymemo_with_flutterfire/providers/memos.dart';
+import 'package:mymemo_with_flutterfire/shared/show-snackbar.dart';
 import 'package:provider/provider.dart';
 import 'dart:html';
 
@@ -27,6 +29,20 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
+  static final _router = GoRouter(routes: [
+    GoRoute(
+        path: '/',
+        builder: (context, state) => const MemoListPage(),
+        routes: [
+          GoRoute(
+              path: 'memos/:id',
+              builder: (context, state) {
+                final id = state.params['id']!;
+                return MemoDetailPage(id: id);
+              })
+        ])
+  ]);
+
   @override
   Widget build(BuildContext context) {
     final auth = Auth();
@@ -36,15 +52,15 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(create: (ctx) => Memos()),
           ChangeNotifierProvider(create: (ctx) => auth)
         ],
-        child: MaterialApp(
+        child: MaterialApp.router(
           title: "Kin's Page",
-          navigatorKey: NavigationService.navigatorKey,
+          scaffoldMessengerKey: scaffoldMessengerKey,
           theme: ThemeData.dark(),
-          routes: {
-            '/': (ctx) => const MemoListPage(),
-            '/detail': (ctx) => const MemoDetailPage()
-          },
+          routeInformationParser: _router.routeInformationParser,
+          routerDelegate: _router.routerDelegate,
           debugShowCheckedModeBanner: false,
+          // after changing to .router, need change navigatorKey to scaffoldMessengerKey
+          // navigatorKey: NavigationService.navigatorKey,
         ));
   }
 }
