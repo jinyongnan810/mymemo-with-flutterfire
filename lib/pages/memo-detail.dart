@@ -4,6 +4,7 @@ import 'package:mymemo_with_flutterfire/components/memo-rendered.dart';
 import 'package:mymemo_with_flutterfire/models/memo.dart';
 import 'package:mymemo_with_flutterfire/providers/auth.dart';
 import 'package:mymemo_with_flutterfire/providers/memos.dart';
+import 'package:mymemo_with_flutterfire/shared/loading.dart';
 import 'package:provider/provider.dart';
 
 class MemoDetailPage extends StatefulWidget {
@@ -17,6 +18,7 @@ class MemoDetailPage extends StatefulWidget {
 
 class _MemoDetailPageState extends State<MemoDetailPage> {
   bool _editing = false;
+  bool _loading = true;
   Memo? memo;
   @override
   void initState() {
@@ -27,6 +29,7 @@ class _MemoDetailPageState extends State<MemoDetailPage> {
         setState(() {
           memo =
               Provider.of<Memos>(context, listen: false).getItemById(widget.id);
+          _loading = false;
         });
       } else {
         final auth = Provider.of<Auth>(context, listen: false);
@@ -34,6 +37,7 @@ class _MemoDetailPageState extends State<MemoDetailPage> {
           setState(() {
             memo = Memo(title: '', content: '', userId: auth.userId);
             _editing = true;
+            _loading = false;
           });
         }
       }
@@ -66,13 +70,15 @@ class _MemoDetailPageState extends State<MemoDetailPage> {
             //       icon: const Icon(Icons.home))),
             // ),
           ),
-          body: memo == null
-              ? const Center(
-                  child: Text('Memo not found.'),
-                )
-              : _editing
-                  ? MemoEditor(memo: memo!)
-                  : MemoRendered(content: memo!.content),
+          body: _loading
+              ? const Loading()
+              : memo == null
+                  ? const Center(
+                      child: Text('Memo not found.'),
+                    )
+                  : _editing
+                      ? MemoEditor(memo: memo!)
+                      : MemoRendered(content: memo!.content),
           floatingActionButton: (memo == null ||
                   !auth.signedIn ||
                   memo!.userId != auth.userId)

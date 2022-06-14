@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mymemo_with_flutterfire/components/memo-item.dart';
 import 'package:mymemo_with_flutterfire/providers/memos.dart';
+import 'package:mymemo_with_flutterfire/shared/loading.dart';
 import 'package:provider/provider.dart';
 
 class MemoList extends StatefulWidget {
@@ -50,7 +51,7 @@ class _MemoListState extends State<MemoList> {
         future: _fetchFirstItems,
         builder: (ctx, dataSnapshot) {
           if (dataSnapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const Loading();
           } else {
             if (dataSnapshot.error != null) {
               print(dataSnapshot.error);

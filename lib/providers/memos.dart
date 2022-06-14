@@ -18,7 +18,8 @@ class Memos extends ChangeNotifier {
   }
 
   Memo? getItemById(String id) {
-    return _items.firstWhere((element) => element.id == id);
+    final memoMatched = _items.where((element) => element.id == id);
+    return memoMatched.isEmpty ? null : memoMatched.first;
   }
 
   void addItem(Memo memo) {
