@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mymemo_with_flutterfire/components/memo-editor.dart';
 import 'package:mymemo_with_flutterfire/components/memo-rendered.dart';
 import 'package:mymemo_with_flutterfire/models/memo.dart';
@@ -97,8 +98,8 @@ class _MemoDetailPageState extends State<MemoDetailPage> {
                     elevation: 0,
                     onPressed: () async {
                       if (_editing) {
+                        final isNewMemo = memo!.id == null;
                         try {
-                          final isNewMemo = memo!.id == null;
                           await memo!.save();
                           if (isNewMemo) {
                             Provider.of<Memos>(context, listen: false)
@@ -118,6 +119,9 @@ class _MemoDetailPageState extends State<MemoDetailPage> {
                         setState(() {
                           _editing = false;
                         });
+                        if (isNewMemo) {
+                          GoRouter.of(context).go('/memos/${memo!.id}');
+                        }
                       } else {
                         setState(() {
                           _editing = true;
