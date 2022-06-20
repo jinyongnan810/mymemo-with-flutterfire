@@ -26,9 +26,10 @@ class _MemoDetailPageState extends State<MemoDetailPage> {
     () async {
       await Future.delayed(Duration.zero);
       if (widget.id != 'new') {
+        final memoFetched = await Provider.of<Memos>(context, listen: false)
+            .getItemById(widget.id);
         setState(() {
-          memo =
-              Provider.of<Memos>(context, listen: false).getItemById(widget.id);
+          memo = memoFetched;
           _loading = false;
         });
       } else {
@@ -59,7 +60,7 @@ class _MemoDetailPageState extends State<MemoDetailPage> {
           extendBodyBehindAppBar: true,
           backgroundColor: Colors.transparent,
           appBar: AppBar(
-            title: Text(memo?.title ?? 'Not found'),
+            title: Text(_loading ? 'Loading...' : memo?.title ?? 'Not found'),
             backgroundColor: Colors.transparent,
             elevation: 0,
             // leading: Builder(

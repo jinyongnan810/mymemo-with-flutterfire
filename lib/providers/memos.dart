@@ -17,9 +17,18 @@ class Memos extends ChangeNotifier {
     return [..._items];
   }
 
-  Memo? getItemById(String id) {
+  Future<Memo?> getItemById(String id) async {
     final memoMatched = _items.where((element) => element.id == id);
-    return memoMatched.isEmpty ? null : memoMatched.first;
+    if (memoMatched.isEmpty) {
+      final memoSnapshot =
+          await FirebaseFirestore.instance.collection('memos').doc(id).get();
+      if (memoSnapshot.exists) {
+        final Memo memo = Memo.fromJson(id, memoSnapshot.data()!);
+        return memo;
+      }
+      return null;
+    }
+    return memoMatched.first;
   }
 
   void addItem(Memo memo) {
