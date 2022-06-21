@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mymemo_with_flutterfire/components/memo-list.dart';
 import 'package:mymemo_with_flutterfire/providers/auth.dart';
+import 'package:mymemo_with_flutterfire/shared/memo-list-search-delegate.dart';
 import 'package:provider/provider.dart';
 
 class MemoListPage extends StatelessWidget {
@@ -24,6 +25,14 @@ class MemoListPage extends StatelessWidget {
             title: const Text("Kin's Page"),
             backgroundColor: Colors.transparent,
             elevation: 0,
+            actions: [
+              IconButton(
+                  onPressed: () {
+                    showSearch(
+                        context: context, delegate: MemoListSearchDelegate());
+                  },
+                  icon: const Icon(Icons.search))
+            ],
             leading:
                 // currently only supports web
                 kIsWeb
