@@ -9,7 +9,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mymemo_with_flutterfire/models/memo.dart';
 
 class Memos extends ChangeNotifier {
-  final int itemsPerPage = 20;
+  static int itemsPerPage = 20;
   final List<Memo> _items = [];
   DocumentSnapshot? lastFetchedDocument;
   String? nextPageToken;
@@ -43,6 +43,26 @@ class Memos extends ChangeNotifier {
 
   void notify() {
     notifyListeners();
+  }
+
+  static Future<List<Memo>> queryItems(String query) async {
+    print('queryItems:$query');
+    QuerySnapshot<Map<String, dynamic>> res = await FirebaseFirestore.instance
+        .collection('memos')
+        .orderBy('updatedAt', descending: true)
+        .get();
+    if (res.docs.isEmpty) {
+      return [];
+    }
+    final memos = res.docs.map<Memo>((doc) {
+      final docData = doc.data();
+      final Memo memo = Memo.fromJson(doc.id, docData);
+      return memo;
+    }).toList();
+    return memos.where((memo) {
+      return memo.title.contains(RegExp(query, caseSensitive: false)) ||
+          memo.content.contains(RegExp(query, caseSensitive: false));
+    }).toList();
   }
 
   Future<void> fetchFirstItems() async {

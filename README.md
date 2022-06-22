@@ -5,6 +5,8 @@
 - Not able to sign in at windows desktop
 - `.env` must be renamed as `env` to prevent deployment error
 - backticks create a blocked code
+- firebase firestore doesn't support search by string contains
+- cannot go to search target with ctrl+f
 
 ## run with specific port
 
