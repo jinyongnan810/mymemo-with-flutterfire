@@ -27,10 +27,6 @@ class MemoRendered extends StatelessWidget {
           'code': CodeBuilder(),
           'h1': CenteredHeaderBuilder(),
           'h2': CenteredHeaderBuilder(),
-          'h3': CenteredHeaderBuilder(),
-          'h4': CenteredHeaderBuilder(),
-          'h5': CenteredHeaderBuilder(),
-          'h6': CenteredHeaderBuilder(),
         },
       ),
     );
