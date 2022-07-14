@@ -11,6 +11,8 @@ import 'package:mymemo_with_flutterfire/providers/memos.dart';
 import 'package:mymemo_with_flutterfire/shared/show-snackbar.dart';
 import 'package:provider/provider.dart';
 import 'dart:html';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 Future<void> main() async {
   await dotenv.load(fileName: "env");
@@ -54,6 +56,8 @@ class MyApp extends StatelessWidget {
         ],
         child: MaterialApp.router(
           title: "Kin's Page",
+          // gets null, still checking
+          // title: K.of(context)!.appTitle,
           scaffoldMessengerKey: scaffoldMessengerKey,
           theme: ThemeData.dark(),
           routeInformationParser: _router.routeInformationParser,
@@ -61,6 +65,16 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           // after changing to .router, need change navigatorKey to scaffoldMessengerKey
           // navigatorKey: NavigationService.navigatorKey,
+          localizationsDelegates: const [
+            K.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            Locale('en', ''),
+            Locale('ja', ''),
+          ],
         ));
   }
 }
