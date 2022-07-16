@@ -55,9 +55,10 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(create: (ctx) => auth)
         ],
         child: MaterialApp.router(
-          title: "Kin's Page",
-          // gets null, still checking
+          // title: "Kin's Page",
+          // gets null, need use onGenerateTitle
           // title: K.of(context)!.appTitle,
+          onGenerateTitle: (ctx) => K.of(ctx)!.appTitle,
           scaffoldMessengerKey: scaffoldMessengerKey,
           theme: ThemeData.dark(),
           routeInformationParser: _router.routeInformationParser,

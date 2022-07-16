@@ -5,6 +5,7 @@ import 'package:mymemo_with_flutterfire/components/memo-list.dart';
 import 'package:mymemo_with_flutterfire/providers/auth.dart';
 import 'package:mymemo_with_flutterfire/shared/memo-list-search-delegate.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MemoListPage extends StatelessWidget {
   static String routeName = '/';
@@ -22,7 +23,7 @@ class MemoListPage extends StatelessWidget {
             extendBodyBehindAppBar: true,
             backgroundColor: Colors.transparent,
             appBar: AppBar(
-              title: const Text("Kin's Page"),
+              title: Text(K.of(context)!.appTitle),
               backgroundColor: Colors.transparent,
               elevation: 0,
               actions: [
@@ -42,7 +43,9 @@ class MemoListPage extends StatelessWidget {
                                   child: Padding(
                                       padding: const EdgeInsets.only(left: 10),
                                       child: PopupMenuButton(
-                                        tooltip: auth.myProfile.email,
+                                        tooltip: K
+                                            .of(context)!
+                                            .loggedInHint(auth.myProfile.email),
                                         position: PopupMenuPosition.under,
                                         onSelected: (value) async {
                                           if (value == 'signOut') {
@@ -50,8 +53,9 @@ class MemoListPage extends StatelessWidget {
                                           }
                                         },
                                         itemBuilder: (ctx) => [
-                                          const PopupMenuItem(
-                                            child: Text('Sign out'),
+                                          PopupMenuItem(
+                                            child:
+                                                Text(K.of(context)!.logoutHint),
                                             value: 'signOut',
                                           ),
                                         ],
@@ -65,16 +69,16 @@ class MemoListPage extends StatelessWidget {
                                           )),
                                         ),
                                       )),
-                                  message:
-                                      'Signed in with ${auth.myProfile.email}. Click to sign out.',
-                                )
+                                  message: K
+                                      .of(context)!
+                                      .loggedInHint(auth.myProfile.email))
                               : Tooltip(
                                   child: IconButton(
                                       onPressed: () async {
                                         await auth.signIn();
                                       },
                                       icon: const Icon(Icons.person)),
-                                  message: 'Sign in',
+                                  message: K.of(context)!.loginHint,
                                 ))
                       : Container(),
             ),

@@ -1,4 +1,14 @@
 {
     "@@locale": "ja",
-    "appTitle": "きんのページ"
+    "appTitle": "きんのぺーじ",
+    "loginHint": "ろぐいん",
+    "logoutHint": "ろぐあうと",
+    "loggedInHint": "{email}でログインしています。",
+    "@loggedInHint": {
+        "placeholders": {
+            "email": {
+                "type": "String"
+            }
+        }
+    }
 }

@@ -1,4 +1,14 @@
 {
     "@@locale": "en",
-    "appTitle": "Kin's Page"
+    "appTitle": "Kin's Page",
+    "loginHint": "Sign in",
+    "logoutHint": "Sign out",
+    "loggedInHint": "Signed in with {email}.",
+    "@loggedInHint": {
+        "placeholders": {
+            "email": {
+                "type": "String"
+            }
+        }
+    }
 }
