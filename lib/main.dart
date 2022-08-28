@@ -13,6 +13,7 @@ import 'package:provider/provider.dart';
 import 'dart:html';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter/scheduler.dart';
 
 Future<void> main() async {
   await dotenv.load(fileName: "env");
@@ -25,6 +26,7 @@ Future<void> main() async {
           appId: dotenv.env['APP_ID'] ?? '',
           storageBucket: dotenv.env['STORAGE_BUCKET'] ?? ''));
   window.document.onContextMenu.listen((evt) => evt.preventDefault());
+  timeDilation = 5.0;
   runApp(const MyApp());
 }
 

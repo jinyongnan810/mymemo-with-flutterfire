@@ -7,6 +7,7 @@ import 'package:mymemo_with_flutterfire/providers/auth.dart';
 import 'package:mymemo_with_flutterfire/providers/memos.dart';
 import 'package:mymemo_with_flutterfire/shared/loading.dart';
 import 'package:provider/provider.dart';
+import 'package:animations/animations.dart';
 
 class MemoDetailPage extends StatefulWidget {
   final String id;
@@ -17,7 +18,8 @@ class MemoDetailPage extends StatefulWidget {
   State<MemoDetailPage> createState() => _MemoDetailPageState();
 }
 
-class _MemoDetailPageState extends State<MemoDetailPage> {
+class _MemoDetailPageState extends State<MemoDetailPage>
+    with SingleTickerProviderStateMixin {
   bool _editing = false;
   bool _loading = true;
   Memo? memo;
@@ -127,11 +129,41 @@ class _MemoDetailPageState extends State<MemoDetailPage> {
                       });
                     }
                   },
-                  child: _editing
-                      ? const Icon(Icons.save)
-                      : const Icon(Icons.edit),
+                  child: _FadeThroughTransitionSwitcher(
+                      fillColor: Colors.transparent,
+                      child: _editing
+                          ? const Icon(
+                              Icons.save,
+                              key: ValueKey('saveBtn'),
+                            )
+                          : const Icon(Icons.edit)),
                 ),
               ),
             )));
+  }
+}
+
+class _FadeThroughTransitionSwitcher extends StatelessWidget {
+  const _FadeThroughTransitionSwitcher({
+    required this.fillColor,
+    required this.child,
+  });
+
+  final Widget child;
+  final Color fillColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return PageTransitionSwitcher(
+      transitionBuilder: (child, animation, secondaryAnimation) {
+        return FadeThroughTransition(
+          fillColor: fillColor,
+          child: child,
+          animation: animation,
+          secondaryAnimation: secondaryAnimation,
+        );
+      },
+      child: child,
+    );
   }
 }
