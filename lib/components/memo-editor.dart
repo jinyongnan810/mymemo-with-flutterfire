@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:file_picker/_internal/file_picker_web.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -36,6 +38,35 @@ class MakeLinkAction extends Action<MakeLinkIntent> {
     final newOffset = subString.isEmpty
         ? baseOffset + replaceString.length - 3
         : baseOffset + replaceString.length - 1;
+    controller.selection = TextSelection.collapsed(offset: newOffset);
+  }
+}
+
+class PressEnterIntent extends Intent {
+  const PressEnterIntent();
+}
+
+class PressEnterAction extends Action<PressEnterIntent> {
+  final TextEditingController controller;
+  PressEnterAction(this.controller);
+  @override
+  void invoke(PressEnterIntent intent) {
+    final pos = controller.selection.baseOffset;
+    final sofar = controller.text.substring(0, pos);
+    LineSplitter ls = const LineSplitter();
+    List<String> linesSoFar = ls.convert(sofar);
+    final currentLine = linesSoFar.last;
+    final replaceString;
+    if (RegExp(r'^\- ').hasMatch(currentLine)) {
+      replaceString = '\r\n' + '- \r\n';
+    } else {
+      replaceString = '\r\n';
+    }
+    controller.text = controller.text.replaceRange(
+        controller.selection.baseOffset,
+        controller.selection.baseOffset + 1,
+        replaceString);
+    final newOffset = pos + 3;
     controller.selection = TextSelection.collapsed(offset: newOffset);
   }
 }
@@ -150,11 +181,13 @@ class _MemoEditorState extends State<MemoEditor> {
         shortcuts: {
           LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyL):
               const MakeLinkIntent(),
+          LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.enter):
+              const PressEnterIntent(),
         },
         child: Actions(
             dispatcher: const ActionDispatcher(),
             actions: {
-              MakeLinkIntent: MakeLinkAction(_contentEditor),
+              PressEnterIntent: PressEnterAction(_contentEditor),
             },
             child: Column(children: [
               Padding(
