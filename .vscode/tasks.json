@@ -1,0 +1,10 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "l10n",
+      "type": "shell",
+      "command": "flutter gen-l10n"
+    }
+  ]
+}

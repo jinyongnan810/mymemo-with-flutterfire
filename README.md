@@ -8,15 +8,9 @@
 - firebase firestore doesn't support search by string contains
 - cannot go to search target with ctrl+f
 
-## Before Running
+## Running commands
 
-```bash
-flutter gen-l10n
-```
-
-## run with specific port
-
-- flutter run -d chrome --web-port=1234
+- check `launch.json` & `tasks.json`
 
 ## Deployment to Firebase hosting
 
