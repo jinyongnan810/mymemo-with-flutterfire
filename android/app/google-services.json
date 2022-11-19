@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "666854488425",
+    "project_id": "mymemo-98f76",
+    "storage_bucket": "mymemo-98f76.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:666854488425:android:0daa41bccab54d477225f8",
+        "android_client_info": {
+          "package_name": "com.example.mymemo_with_flutterfire"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "666854488425-8n64pvk3m3u9bam0tk0qdjk0pah7ce77.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB8zcCs0oeGlkAxoLJKSWHbiSBVs3WGux8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "666854488425-8n64pvk3m3u9bam0tk0qdjk0pah7ce77.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "666854488425-eimcmu8m1iun2ifdf94c3ti6oa3vks03.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.mymemoWithFlutterfire"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

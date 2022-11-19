@@ -3,10 +3,10 @@ import 'dart:html';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mymemo_with_flutterfire/firebase_options.dart';
 import 'package:mymemo_with_flutterfire/pages/memo-detail.dart';
 import 'package:mymemo_with_flutterfire/pages/memo-list.dart';
 import 'package:mymemo_with_flutterfire/providers/auth.dart';
@@ -15,15 +15,10 @@ import 'package:mymemo_with_flutterfire/shared/show-snackbar.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main() async {
-  await dotenv.load(fileName: "env");
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-      options: FirebaseOptions(
-          apiKey: dotenv.env['API_KEY'] ?? '',
-          authDomain: dotenv.env['AUTH_DOMAIN'] ?? '',
-          projectId: dotenv.env['PROJECT_ID'] ?? '',
-          messagingSenderId: dotenv.env['MESSAGING_SENDER_ID'] ?? '',
-          appId: dotenv.env['APP_ID'] ?? '',
-          storageBucket: dotenv.env['STORAGE_BUCKET'] ?? ''));
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   window.document.onContextMenu.listen((evt) => evt.preventDefault());
   // timeDilation = 5.0;
   runApp(const MyApp());
