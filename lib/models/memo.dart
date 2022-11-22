@@ -1,9 +1,10 @@
+import 'dart:convert';
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class Memo {
   String? id;
@@ -23,9 +24,9 @@ class Memo {
   factory Memo.fromJsonRest(Map<String, dynamic> json) {
     return Memo(
       id: json['name'].toString().split('/').last,
-      userId: json['fields']['userId']['stringValue'],
-      title: json['fields']['title']['stringValue'],
-      content: json['fields']['content']['stringValue'],
+      userId: json['fields']['userId']['stringValue'] as String,
+      title: json['fields']['title']['stringValue'] as String,
+      content: json['fields']['content']['stringValue'] as String,
       createdAt:
           int.parse(json['fields']['createdAt']['integerValue'].toString()),
       updatedAt:
@@ -34,12 +35,13 @@ class Memo {
   }
   factory Memo.fromJson(String id, Map<String, dynamic> json) {
     return Memo(
-        id: id,
-        userId: json['userId'],
-        title: json['title'],
-        content: json['content'],
-        createdAt: json['createdAt'],
-        updatedAt: json['updatedAt']);
+      id: id,
+      userId: json['userId'] as String,
+      title: json['title'] as String,
+      content: json['content'] as String,
+      createdAt: json['createdAt'] as int,
+      updatedAt: json['updatedAt'] as int,
+    );
   }
   Future<void> save() async {
     final now = DateTime.now().millisecondsSinceEpoch;
@@ -81,7 +83,8 @@ class Memo {
                 'updatedAt': {'integerValue': now},
               }
             }));
-        final Map<String, dynamic> decodedRes = jsonDecode(res.body);
+        final Map<String, dynamic> decodedRes =
+            jsonDecode(res.body) as Map<String, dynamic>;
         id = decodedRes['name'].toString().split('/').last;
         createdAt = now;
         updatedAt = now;

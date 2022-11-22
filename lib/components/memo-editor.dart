@@ -1,21 +1,15 @@
 import 'dart:convert';
 
-import 'package:file_picker/_internal/file_picker_web.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mymemo_with_flutterfire/components/code-builder.dart';
-import 'package:mymemo_with_flutterfire/components/header-builder.dart';
 import 'package:mymemo_with_flutterfire/components/memo-rendered.dart';
 import 'package:mymemo_with_flutterfire/models/memo.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:mymemo_with_flutterfire/providers/auth.dart';
-import 'package:mymemo_with_flutterfire/shared/markdown_extensions.dart';
 import 'package:mymemo_with_flutterfire/shared/split.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 import 'package:uuid/uuid.dart';
 
 class MakeLinkIntent extends Intent {
@@ -56,9 +50,9 @@ class PressEnterAction extends Action<PressEnterIntent> {
     LineSplitter ls = const LineSplitter();
     List<String> linesSoFar = ls.convert(sofar);
     final currentLine = linesSoFar.last;
-    final replaceString;
+    final String replaceString;
     if (RegExp(r'^\- ').hasMatch(currentLine)) {
-      replaceString = '\r\n' + '- \r\n';
+      replaceString = '\r\n' '- \r\n';
     } else {
       replaceString = '\r\n';
     }

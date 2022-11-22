@@ -1,5 +1,3 @@
-import 'package:flutter/cupertino.dart';
-
 class UserProfile {
   String id;
   String displayName;
@@ -13,6 +11,10 @@ class UserProfile {
   );
   factory UserProfile.fromJson(String id, Map<String, dynamic> json) {
     return UserProfile(
-        id, json['displayName'], json['photoUrl'], json['email']);
+      id,
+      json['displayName'] as String,
+      json['photoUrl'] as String,
+      json['email'] as String,
+    );
   }
 }

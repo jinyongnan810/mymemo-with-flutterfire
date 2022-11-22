@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:mymemo_with_flutterfire/models/memo.dart';
 import 'package:mymemo_with_flutterfire/models/profile.dart';
-import 'package:mymemo_with_flutterfire/pages/memo-detail.dart';
 import 'package:mymemo_with_flutterfire/providers/auth.dart';
 import 'package:mymemo_with_flutterfire/providers/memos.dart';
 import 'package:provider/provider.dart';
@@ -81,7 +80,7 @@ class MemoItem extends StatelessWidget {
                     alignment: Alignment.topRight,
                     child: IconButton(
                         onPressed: () async {
-                          final confirmed = await showDialog(
+                          final bool? confirmed = await showDialog(
                               context: context,
                               builder: (_) => AlertDialog(
                                     title: Text(

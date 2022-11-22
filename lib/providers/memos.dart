@@ -1,11 +1,10 @@
+import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:http/http.dart' as http;
 import 'package:mymemo_with_flutterfire/models/memo.dart';
 
 class Memos extends ChangeNotifier {
@@ -91,16 +90,16 @@ class Memos extends ChangeNotifier {
       final url = Uri.parse(
           "https://firestore.googleapis.com/v1/projects/${dotenv.env['PROJECT_ID']}/databases/(default)/documents/memos?pageSize=$itemsPerPage&orderBy=updatedAt desc");
       final res = await http.get(url);
-      final Map<String, dynamic> decodedRes = jsonDecode(res.body);
+      final decodedRes = jsonDecode(res.body);
       if (decodedRes['documents'] == null) {
         nextPageToken = null;
         return;
       }
       final memos = (decodedRes['documents'] as List<dynamic>).map((doc) {
-        return Memo.fromJsonRest(doc);
+        return Memo.fromJsonRest(doc as Map<String, dynamic>);
       });
       print(memos);
-      nextPageToken = decodedRes['nextPageToken'];
+      nextPageToken = decodedRes['nextPageToken'] as String?;
       _items.addAll(memos);
       notifyListeners();
     }
@@ -140,16 +139,15 @@ class Memos extends ChangeNotifier {
       final url = Uri.parse(
           "https://firestore.googleapis.com/v1/projects/${dotenv.env['PROJECT_ID']}/databases/(default)/documents/memos?pageSize=$itemsPerPage&orderBy=updatedAt desc&pageToken=$nextPageToken");
       final res = await http.get(url);
-      final Map<String, dynamic> decodedRes = jsonDecode(res.body);
+      final decodedRes = jsonDecode(res.body);
       if (decodedRes['documents'] == null) {
         nextPageToken = null;
         return;
       }
-      ;
       final memos = (decodedRes['documents'] as List<dynamic>).map((doc) {
-        return Memo.fromJsonRest(doc);
+        return Memo.fromJsonRest(doc as Map<String, dynamic>);
       });
-      nextPageToken = decodedRes['nextPageToken'];
+      nextPageToken = decodedRes['nextPageToken'] as String?;
       _items.addAll(memos);
       notifyListeners();
     }
