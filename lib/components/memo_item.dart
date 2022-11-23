@@ -18,6 +18,7 @@ class MemoItem extends StatelessWidget {
     final fullDate = DateFormat('yyyy/MM/dd H:m').format(updatedAt);
     final shortDate = DateFormat('MM/dd H:m').format(updatedAt);
     final date = (updatedAt.year == DateTime.now().year) ? shortDate : fullDate;
+
     return InkWell(
       highlightColor: Theme.of(context).primaryColor,
       borderRadius: BorderRadius.circular(10),
@@ -31,88 +32,100 @@ class MemoItem extends StatelessWidget {
             ),
           ),
           Container(
-              alignment: Alignment.bottomLeft,
-              padding: const EdgeInsets.only(bottom: 10, left: 10),
-              child: Tooltip(
-                child: Text(
-                  date,
-                  style: const TextStyle(fontSize: 12),
-                ),
-                message: 'Updated at $fullDate',
-              )),
+            alignment: Alignment.bottomLeft,
+            padding: const EdgeInsets.only(bottom: 10, left: 10),
+            child: Tooltip(
+              child: Text(
+                date,
+                style: const TextStyle(fontSize: 12),
+              ),
+              message: 'Updated at $fullDate',
+            ),
+          ),
           Container(
-              padding: const EdgeInsets.only(left: 10, top: 10),
-              alignment: Alignment.topLeft,
-              child: FutureBuilder<UserProfile>(
-                future: auth.getUser(memo.userId),
-                builder: (ctx, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    final photo = snapshot.data!.photoUrl;
-                    return Tooltip(
-                      child: Row(
-                        children: [
-                          photo == ''
-                              ? const CircleAvatar(
-                                  radius: 15, child: Icon(Icons.person))
-                              : CircleAvatar(
-                                  radius: 15,
-                                  backgroundImage:
-                                      NetworkImage(snapshot.data!.photoUrl),
-                                ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Text(snapshot.data!.displayName)
-                        ],
-                      ),
-                      message: snapshot.data!.email,
-                    );
-                  }
-                  return const Tooltip(
-                    child: CircularProgressIndicator(),
-                    message: 'Loading Profile...',
+            padding: const EdgeInsets.only(left: 10, top: 10),
+            alignment: Alignment.topLeft,
+            child: FutureBuilder<UserProfile>(
+              future: auth.getUser(memo.userId),
+              builder: (ctx, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  final photo = snapshot.data!.photoUrl;
+
+                  return Tooltip(
+                    child: Row(
+                      children: [
+                        photo == ''
+                            ? const CircleAvatar(
+                                radius: 15,
+                                child: Icon(Icons.person),
+                              )
+                            : CircleAvatar(
+                                radius: 15,
+                                backgroundImage:
+                                    NetworkImage(snapshot.data!.photoUrl),
+                              ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Text(snapshot.data!.displayName),
+                      ],
+                    ),
+                    message: snapshot.data!.email,
                   );
-                },
-              )),
+                }
+
+                return const Tooltip(
+                  child: CircularProgressIndicator(),
+                  message: 'Loading Profile...',
+                );
+              },
+            ),
+          ),
           Consumer<Auth>(builder: ((context, auth, child) {
             return auth.signedIn && memo.userId == auth.userId
                 ? Container(
                     alignment: Alignment.topRight,
                     child: IconButton(
-                        onPressed: () async {
-                          final bool? confirmed = await showDialog(
-                              context: context,
-                              builder: (_) => AlertDialog(
-                                    title: Text(
-                                        'Are you sure to delete ${memo.title}'),
-                                    content: const Text(
-                                        'This action cannot be undone.'),
-                                    actions: [
-                                      TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop(false);
-                                          },
-                                          child: const Text('Cancel')),
-                                      TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop(true);
-                                          },
-                                          child: const Text('Delete')),
-                                    ],
-                                  ));
-                          if (confirmed == true) {
-                            await memo.delete();
-                            Provider.of<Memos>(context, listen: false)
-                                .deleteItem(memo);
-                          }
-                        },
-                        icon: const Icon(
-                          Icons.close,
-                          color: Colors.grey,
-                        )),
+                      onPressed: () async {
+                        final bool? confirmed = await showDialog(
+                          context: context,
+                          builder: (_) => AlertDialog(
+                            title: Text(
+                              'Are you sure to delete ${memo.title}',
+                            ),
+                            content: const Text(
+                              'This action cannot be undone.',
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop(false);
+                                },
+                                child: const Text('Cancel'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop(true);
+                                },
+                                child: const Text('Delete'),
+                              ),
+                            ],
+                          ),
+                        );
+                        if (confirmed == true) {
+                          await memo.delete();
+                          Provider.of<Memos>(context, listen: false)
+                              .deleteItem(memo);
+                        }
+                      },
+                      icon: const Icon(
+                        Icons.close,
+                        color: Colors.grey,
+                      ),
+                    ),
                   )
                 : Container();
-          }))
+          })),
         ],
       ),
     );
