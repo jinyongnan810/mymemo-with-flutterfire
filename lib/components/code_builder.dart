@@ -4,10 +4,9 @@ import 'package:flutter_highlight/flutter_highlight.dart';
 import 'package:flutter_highlight/themes/atom-one-light.dart';
 import 'package:flutter_highlight/themes/ocean.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:markdown/markdown.dart' as md;
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mymemo_with_flutterfire/navigation-service.dart';
-import 'package:mymemo_with_flutterfire/shared/show-snackbar.dart';
+import 'package:markdown/markdown.dart' as md;
+import 'package:mymemo_with_flutterfire/shared/show_snackbar.dart';
 
 // from https://github.com/git-touch/highlight.dart
 // from https://stackoverflow.com/a/70733069

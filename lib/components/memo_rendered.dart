@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:mymemo_with_flutterfire/components/code-builder.dart';
-import 'package:mymemo_with_flutterfire/components/header-builder.dart';
+import 'package:mymemo_with_flutterfire/components/code_builder.dart';
+import 'package:mymemo_with_flutterfire/components/header_builder.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class MemoRendered extends StatelessWidget {

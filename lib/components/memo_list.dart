@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mymemo_with_flutterfire/components/memo-item.dart';
+import 'package:mymemo_with_flutterfire/components/memo_item.dart';
 import 'package:mymemo_with_flutterfire/providers/memos.dart';
 import 'package:mymemo_with_flutterfire/shared/loading.dart';
 import 'package:provider/provider.dart';

@@ -2,8 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mymemo_with_flutterfire/models/profile.dart';
-import 'package:mymemo_with_flutterfire/navigation-service.dart';
-import 'package:mymemo_with_flutterfire/shared/show-snackbar.dart';
+import 'package:mymemo_with_flutterfire/shared/show_snackbar.dart';
 
 class Auth extends ChangeNotifier {
   bool signedIn = false;

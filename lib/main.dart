@@ -7,11 +7,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mymemo_with_flutterfire/firebase_options.dart';
-import 'package:mymemo_with_flutterfire/pages/memo-detail.dart';
-import 'package:mymemo_with_flutterfire/pages/memo-list.dart';
+import 'package:mymemo_with_flutterfire/pages/memo_detail.dart';
+import 'package:mymemo_with_flutterfire/pages/memo_list.dart';
 import 'package:mymemo_with_flutterfire/providers/auth.dart';
 import 'package:mymemo_with_flutterfire/providers/memos.dart';
-import 'package:mymemo_with_flutterfire/shared/show-snackbar.dart';
+import 'package:mymemo_with_flutterfire/shared/show_snackbar.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main() async {
