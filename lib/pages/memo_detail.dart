@@ -53,93 +53,105 @@ class _MemoDetailPageState extends State<MemoDetailPage>
   @override
   Widget build(BuildContext context) {
     final auth = Provider.of<Auth>(context, listen: false);
+
     return Container(
-        decoration: const BoxDecoration(
-            gradient: LinearGradient(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [Colors.purple, Colors.orange],
+        ),
+      ),
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          title: Text(_loading ? 'Loading...' : memo?.title ?? 'Not found'),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          // leading: Builder(
+          //   builder: ((context) => IconButton(
+          //       onPressed: () {
+          //         Navigator.of(context).pushReplacementNamed('/');
+          //       },
+          //       icon: const Icon(Icons.home))),
+          // ),
+        ),
+        body: _loading
+            ? const Loading()
+            : memo == null
+                ? const Center(
+                    child: Text('Memo not found.'),
+                  )
+                : _editing
+                    ? MemoEditor(memo: memo!)
+                    : MemoRendered(content: memo!.content),
+        floatingActionButton: Visibility(
+          visible: memo != null && auth.signedIn && memo!.userId == auth.userId,
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [Colors.purple, Colors.orange])),
-        child: Scaffold(
-            extendBodyBehindAppBar: true,
-            backgroundColor: Colors.transparent,
-            appBar: AppBar(
-              title: Text(_loading ? 'Loading...' : memo?.title ?? 'Not found'),
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              // leading: Builder(
-              //   builder: ((context) => IconButton(
-              //       onPressed: () {
-              //         Navigator.of(context).pushReplacementNamed('/');
-              //       },
-              //       icon: const Icon(Icons.home))),
-              // ),
-            ),
-            body: _loading
-                ? const Loading()
-                : memo == null
-                    ? const Center(
-                        child: Text('Memo not found.'),
-                      )
-                    : _editing
-                        ? MemoEditor(memo: memo!)
-                        : MemoRendered(content: memo!.content),
-            floatingActionButton: Visibility(
-              visible:
-                  memo != null && auth.signedIn && memo!.userId == auth.userId,
-              child: Container(
-                decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [Colors.purple, Colors.orange]),
-                    borderRadius: BorderRadius.circular(30)),
-                child: FloatingActionButton(
-                  backgroundColor: Colors.transparent,
-                  foregroundColor: Colors.white,
-                  elevation: 0,
-                  onPressed: () async {
-                    if (_editing) {
-                      final isNewMemo = memo!.id == null;
-                      try {
-                        await memo!.save();
-                        if (isNewMemo) {
-                          Provider.of<Memos>(context, listen: false)
-                              .addItem(memo!);
-                        } else {
-                          Provider.of<Memos>(context, listen: false).notify();
-                        }
-                      } catch (e) {
-                        print(Text(e.toString()));
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text('Error saving memo.')));
-                        return;
-                      }
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Memo saved.')));
-                      setState(() {
-                        _editing = false;
-                      });
-                      if (isNewMemo) {
-                        GoRouter.of(context).go('/memos/${memo!.id}');
-                      }
-                    } else {
-                      setState(() {
-                        _editing = true;
-                      });
-                    }
-                  },
-                  child: _FadeThroughTransitionSwitcher(
-                      fillColor: Colors.transparent,
-                      child: _editing
-                          ? const Icon(
-                              Icons.save,
-                              key: ValueKey('saveBtn'),
-                            )
-                          : const Icon(Icons.edit)),
-                ),
+                colors: [Colors.purple, Colors.orange],
               ),
-            )));
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: FloatingActionButton(
+              backgroundColor: Colors.transparent,
+              foregroundColor: Colors.white,
+              elevation: 0,
+              onPressed: () async {
+                if (_editing) {
+                  final isNewMemo = memo!.id == null;
+                  try {
+                    await memo!.save();
+                    if (isNewMemo) {
+                      Provider.of<Memos>(context, listen: false).addItem(memo!);
+                    } else {
+                      Provider.of<Memos>(context, listen: false).notify();
+                    }
+                  } catch (e) {
+                    debugPrint(e.toString());
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Error saving memo.'),
+                      ),
+                    );
+
+                    return;
+                  }
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Memo saved.'),
+                    ),
+                  );
+                  setState(() {
+                    _editing = false;
+                  });
+                  if (isNewMemo) {
+                    GoRouter.of(context).go('/memos/${memo!.id}');
+                  }
+                } else {
+                  setState(() {
+                    _editing = true;
+                  });
+                }
+              },
+              child: _FadeThroughTransitionSwitcher(
+                fillColor: Colors.transparent,
+                child: _editing
+                    ? const Icon(
+                        Icons.save,
+                        key: ValueKey('saveBtn'),
+                      )
+                    : const Icon(Icons.edit),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
 

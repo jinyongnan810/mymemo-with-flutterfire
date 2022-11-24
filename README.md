@@ -2,7 +2,7 @@
 
 ## Limitations
 
-- Not able to sign in at windows desktop
+- Not able to sign in at windows desktop -> removed windows support
 - backticks create a blocked code
 - firebase firestore doesn't support search by string contains
 - cannot go to search target with ctrl+f

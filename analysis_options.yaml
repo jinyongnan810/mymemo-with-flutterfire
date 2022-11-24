@@ -17,7 +17,7 @@ analyzer:
     - "**/*.g.dart"
     - "**/*.gen.dart"
     - "lib/firebase_options_*.dart"
-    - "lib/navigation-service.dart"
+    - "lib/shared/split.dart"
   strong-mode:
     implicit-casts: false
     # implicit-dynamic: false

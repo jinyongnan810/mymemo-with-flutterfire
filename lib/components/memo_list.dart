@@ -34,7 +34,6 @@ class _MemoListState extends State<MemoList> {
         setState(() {
           _loadingMore = false;
         });
-        return;
       }
     });
   }
@@ -48,48 +47,51 @@ class _MemoListState extends State<MemoList> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: _fetchFirstItems,
-        builder: (ctx, dataSnapshot) {
-          if (dataSnapshot.connectionState == ConnectionState.waiting) {
-            return const Loading();
-          } else {
-            if (dataSnapshot.error != null) {
-              print(dataSnapshot.error);
-              // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              //   content: Text('Error loading the memos.Please refresh again.'),
-              //   duration: Duration(seconds: 5),
-              // ));
-            }
-
-            return Consumer<Memos>(
-                builder: (ctx, memos, _) => Column(
-                      children: [
-                        Expanded(child: LayoutBuilder(
-                          builder: ((context, constraints) {
-                            int cols = constraints.maxWidth > 1200
-                                ? 4
-                                : constraints.maxWidth > 600
-                                    ? 3
-                                    : 2;
-                            return GridView.count(
-                              crossAxisCount: cols,
-                              controller: _scrollController,
-                              children: [
-                                ...memos.items.map((memo) => MemoItem(memo))
-                              ],
-                            );
-                          }),
-                        )),
-                        if (_loadingMore)
-                          const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                          )
-                      ],
-                    ));
+      future: _fetchFirstItems,
+      builder: (ctx, dataSnapshot) {
+        if (dataSnapshot.connectionState == ConnectionState.waiting) {
+          return const Loading();
+        } else {
+          if (dataSnapshot.error != null) {
+            debugPrint(dataSnapshot.error.toString());
+            // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            //   content: Text('Error loading the memos.Please refresh again.'),
+            //   duration: Duration(seconds: 5),
+            // ));
           }
-        });
+
+          return Consumer<Memos>(
+            builder: (ctx, memos, _) => Column(
+              children: [
+                Expanded(child: LayoutBuilder(
+                  builder: ((context, constraints) {
+                    int cols = constraints.maxWidth > 1200
+                        ? 4
+                        : constraints.maxWidth > 600
+                            ? 3
+                            : 2;
+
+                    return GridView.count(
+                      crossAxisCount: cols,
+                      controller: _scrollController,
+                      children: [
+                        ...memos.items.map((memo) => MemoItem(memo)),
+                      ],
+                    );
+                  }),
+                )),
+                if (_loadingMore)
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+              ],
+            ),
+          );
+        }
+      },
+    );
   }
 }

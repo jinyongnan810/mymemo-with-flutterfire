@@ -27,10 +27,14 @@ class Auth extends ChangeNotifier {
     await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
       'displayName': user.displayName ?? '',
       'photoUrl': user.photoURL ?? '',
-      'email': user.email ?? ''
+      'email': user.email ?? '',
     });
-    cachedProfile[user.uid] = UserProfile(user.uid, user.displayName ?? '',
-        user.photoURL ?? '', user.email ?? '');
+    cachedProfile[user.uid] = UserProfile(
+      user.uid,
+      user.displayName ?? '',
+      user.photoURL ?? '',
+      user.email ?? '',
+    );
   }
 
   Future<UserProfile> getUser(String id) async {
@@ -42,10 +46,12 @@ class Auth extends ChangeNotifier {
     if (snapshot.exists) {
       final user = UserProfile.fromJson(id, snapshot.data()!);
       cachedProfile[id] = user;
+
       return user;
     } else {
       final user = UserProfile(id, 'User Not Found', '', '');
       cachedProfile[id] = user;
+
       return user;
     }
   }
@@ -62,15 +68,19 @@ class Auth extends ChangeNotifier {
         userId = '';
         myProfile = UserProfile('', '', '', '');
         notifyListeners();
-        print('User is currently signed out!');
+        debugPrint('User is currently signed out!');
       } else {
         userId = user.uid;
-        myProfile = UserProfile(user.uid, user.displayName ?? '',
-            user.photoURL ?? '', user.email ?? '');
+        myProfile = UserProfile(
+          user.uid,
+          user.displayName ?? '',
+          user.photoURL ?? '',
+          user.email ?? '',
+        );
         await updateUser(user);
         signedIn = true;
         notifyListeners();
-        print('User is signed in!');
+        debugPrint('User is signed in!');
       }
     });
   }

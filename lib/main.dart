@@ -1,4 +1,5 @@
 import 'dart:async';
+// ignore: avoid_web_libraries_in_flutter
 import 'dart:html';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -29,49 +30,54 @@ class MyApp extends StatelessWidget {
 
   static final _router = GoRouter(routes: [
     GoRoute(
-        path: '/',
-        builder: (context, state) => const MemoListPage(),
-        routes: [
-          GoRoute(
-              path: 'memos/:id',
-              builder: (context, state) {
-                final id = state.params['id']!;
-                return MemoDetailPage(id: id);
-              })
-        ])
+      path: '/',
+      builder: (context, state) => const MemoListPage(),
+      routes: [
+        GoRoute(
+          path: 'memos/:id',
+          builder: (context, state) {
+            final id = state.params['id']!;
+
+            return MemoDetailPage(id: id);
+          },
+        ),
+      ],
+    ),
   ]);
 
   @override
   Widget build(BuildContext context) {
     final auth = Auth();
     auth.watch();
+
     return MultiProvider(
-        providers: [
-          ChangeNotifierProvider(create: (ctx) => Memos()),
-          ChangeNotifierProvider(create: (ctx) => auth)
+      providers: [
+        ChangeNotifierProvider(create: (ctx) => Memos()),
+        ChangeNotifierProvider(create: (ctx) => auth),
+      ],
+      child: MaterialApp.router(
+        // title: "Kin's Page",
+        // gets null, need use onGenerateTitle
+        // title: K.of(context)!.appTitle,
+        onGenerateTitle: (ctx) => K.of(ctx)!.appTitle,
+        scaffoldMessengerKey: scaffoldMessengerKey,
+        theme: ThemeData.dark(),
+        routeInformationParser: _router.routeInformationParser,
+        routerDelegate: _router.routerDelegate,
+        debugShowCheckedModeBanner: false,
+        // after changing to .router, need change navigatorKey to scaffoldMessengerKey
+        // navigatorKey: NavigationService.navigatorKey,
+        localizationsDelegates: const [
+          K.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
         ],
-        child: MaterialApp.router(
-          // title: "Kin's Page",
-          // gets null, need use onGenerateTitle
-          // title: K.of(context)!.appTitle,
-          onGenerateTitle: (ctx) => K.of(ctx)!.appTitle,
-          scaffoldMessengerKey: scaffoldMessengerKey,
-          theme: ThemeData.dark(),
-          routeInformationParser: _router.routeInformationParser,
-          routerDelegate: _router.routerDelegate,
-          debugShowCheckedModeBanner: false,
-          // after changing to .router, need change navigatorKey to scaffoldMessengerKey
-          // navigatorKey: NavigationService.navigatorKey,
-          localizationsDelegates: const [
-            K.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: const [
-            Locale('en', ''),
-            Locale('ja', ''),
-          ],
-        ));
+        supportedLocales: const [
+          Locale('en', ''),
+          Locale('ja', ''),
+        ],
+      ),
+    );
   }
 }

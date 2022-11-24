@@ -19,37 +19,39 @@ class CodeBuilder extends MarkdownElementBuilder {
       String lg = element.attributes['class'] as String;
       language = lg.substring(9);
     }
+
     return SizedBox(
-        child: ClipRRect(
-      borderRadius: BorderRadius.circular(10.0),
-      child: GestureDetector(
-        onLongPress: () {
-          Clipboard.setData(ClipboardData(text: element.textContent));
-          showSnackBar('Code copied.');
-        },
-        child: HighlightView(
-          // The original code to be highlighted
-          element.textContent,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10.0),
+        child: GestureDetector(
+          onLongPress: () {
+            Clipboard.setData(ClipboardData(text: element.textContent));
+            showSnackBar('Code copied.');
+          },
+          child: HighlightView(
+            // The original code to be highlighted
+            element.textContent,
 
-          // Specify language
-          // It is recommended to give it a value for performance
-          language: language,
+            // Specify language
+            // It is recommended to give it a value for performance
+            language: language,
 
-          // Specify highlight theme
-          // All available themes are listed in `themes` folder
-          theme: MediaQueryData.fromWindow(WidgetsBinding.instance.window)
-                      .platformBrightness ==
-                  Brightness.light
-              ? oceanTheme
-              : atomOneLightTheme,
+            // Specify highlight theme
+            // All available themes are listed in `themes` folder
+            theme: MediaQueryData.fromWindow(WidgetsBinding.instance.window)
+                        .platformBrightness ==
+                    Brightness.light
+                ? oceanTheme
+                : atomOneLightTheme,
 
-          // Specify padding
-          padding: const EdgeInsets.all(8),
+            // Specify padding
+            padding: const EdgeInsets.all(8),
 
-          // Specify text style
-          textStyle: GoogleFonts.robotoMono(),
+            // Specify text style
+            textStyle: GoogleFonts.robotoMono(),
+          ),
         ),
       ),
-    ));
+    );
   }
 }

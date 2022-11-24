@@ -1,10 +1,7 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:http/http.dart' as http;
 
 class Memo {
   String? id;
@@ -13,13 +10,14 @@ class Memo {
   String content;
   int? createdAt;
   int? updatedAt;
-  Memo(
-      {this.id,
-      required this.userId,
-      required this.title,
-      required this.content,
-      this.createdAt,
-      this.updatedAt});
+  Memo({
+    this.id,
+    required this.userId,
+    required this.title,
+    required this.content,
+    this.createdAt,
+    this.updatedAt,
+  });
 
   factory Memo.fromJsonRest(Map<String, dynamic> json) {
     return Memo(
@@ -46,7 +44,7 @@ class Memo {
   Future<void> save() async {
     final now = DateTime.now().millisecondsSinceEpoch;
     if (kIsWeb || !Platform.isWindows) {
-      print('not windows desktop');
+      debugPrint('not windows desktop');
       if (id == null) {
         final res = await FirebaseFirestore.instance.collection('memos').add({
           'userId': userId,
@@ -58,7 +56,7 @@ class Memo {
         id = res.id;
         createdAt = now;
         updatedAt = now;
-        print('created: $id');
+        debugPrint('created: $id');
       } else {
         await FirebaseFirestore.instance.collection('memos').doc(id).update({
           'title': title,
@@ -66,59 +64,69 @@ class Memo {
           'updatedAt': now,
         });
         updatedAt = now;
-        print('updated');
+        debugPrint('updated');
       }
-    } else if (Platform.isWindows) {
-      print('windows desktop');
+    }
+    /*else if (Platform.isWindows) {
+      debugPrint('windows desktop');
       if (id == null) {
         final url = Uri.parse(
-            "https://firestore.googleapis.com/v1/projects/${dotenv.env['PROJECT_ID']}/databases/(default)/documents/memos");
-        final res = await http.post(url,
-            body: jsonEncode({
-              'fields': {
-                'userId': {'stringValue': userId},
-                'title': {'stringValue': title},
-                'content': {'stringValue': content},
-                'createdAt': {'integerValue': now},
-                'updatedAt': {'integerValue': now},
-              }
-            }));
+          "https://firestore.googleapis.com/v1/projects/${dotenv.env['PROJECT_ID']}/databases/(default)/documents/memos",
+        );
+        final res = await http.post(
+          url,
+          body: jsonEncode({
+            'fields': {
+              'userId': {'stringValue': userId},
+              'title': {'stringValue': title},
+              'content': {'stringValue': content},
+              'createdAt': {'integerValue': now},
+              'updatedAt': {'integerValue': now},
+            },
+          }),
+        );
         final Map<String, dynamic> decodedRes =
             jsonDecode(res.body) as Map<String, dynamic>;
         id = decodedRes['name'].toString().split('/').last;
         createdAt = now;
         updatedAt = now;
-        print('created $id');
+        debugPrint('created $id');
       } else {
         final url = Uri.parse(
-            "https://firestore.googleapis.com/v1/projects/${dotenv.env['PROJECT_ID']}/databases/(default)/documents/memos/$id?updateMask.fieldPaths=title&&updateMask.fieldPaths=content&&updateMask.fieldPaths=updatedAt");
-        final res = await http.patch(url,
-            body: jsonEncode({
-              'fields': {
-                'title': {'stringValue': title},
-                'content': {'stringValue': content},
-                'updatedAt': {'integerValue': now},
-              }
-            }));
+          "https://firestore.googleapis.com/v1/projects/${dotenv.env['PROJECT_ID']}/databases/(default)/documents/memos/$id?updateMask.fieldPaths=title&&updateMask.fieldPaths=content&&updateMask.fieldPaths=updatedAt",
+        );
+        await http.patch(
+          url,
+          body: jsonEncode({
+            'fields': {
+              'title': {'stringValue': title},
+              'content': {'stringValue': content},
+              'updatedAt': {'integerValue': now},
+            },
+          }),
+        );
         updatedAt = now;
-        print('updated');
+        debugPrint('updated');
       }
     }
+    */
   }
 
   Future<void> delete() async {
     if (kIsWeb || !Platform.isWindows) {
-      print('not windows desktop');
+      debugPrint('not windows desktop');
       await FirebaseFirestore.instance.collection('memos').doc(id).delete();
-      print('deleted');
-    } else if (Platform.isWindows) {
-      print('windows desktop');
+      debugPrint('deleted');
+    }
+
+    /*else if (Platform.isWindows) {
+      debugPrint('windows desktop');
 
       final url = Uri.parse(
           "https://firestore.googleapis.com/v1/projects/${dotenv.env['PROJECT_ID']}/databases/(default)/documents/memos/$id");
       final res = await http.delete(url);
-      print(jsonDecode(res.body));
-      print('deleted');
-    }
+      debugPrint(jsonDecode(res.body));
+      debugPrint('deleted');
+    }*/
   }
 }

@@ -1,0 +1,9 @@
+{
+  "ignorePaths": [
+    "*.freezed.dart",
+    "*.g.dart",
+    "/lib/firebase_options_*.dart",
+    "/lib/shared/split.dart"
+  ],
+  "enabledLanguageIds": ["dart", "swift", "kotlin"]
+}

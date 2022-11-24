@@ -11,10 +11,11 @@ class CenteredHeaderBuilder extends MarkdownElementBuilder {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           const Expanded(
-              child: Divider(
-            color: Colors.white,
-            thickness: 2,
-          )),
+            child: Divider(
+              color: Colors.white,
+              thickness: 2,
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: SelectableText(
@@ -25,10 +26,11 @@ class CenteredHeaderBuilder extends MarkdownElementBuilder {
             ),
           ),
           const Expanded(
-              child: Divider(
-            color: Colors.white,
-            thickness: 2,
-          )),
+            child: Divider(
+              color: Colors.white,
+              thickness: 2,
+            ),
+          ),
         ],
       ),
     );
