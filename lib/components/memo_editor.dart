@@ -39,6 +39,60 @@ class MakeLinkAction extends Action<MakeLinkIntent> {
   }
 }
 
+class MakeBoldIntent extends Intent {
+  const MakeBoldIntent();
+}
+
+class MakeBoldAction extends Action<MakeBoldIntent> {
+  final TextEditingController controller;
+  MakeBoldAction(this.controller);
+  @override
+  void invoke(MakeBoldIntent intent) {
+    final subString = controller.text.substring(
+      controller.selection.baseOffset,
+      controller.selection.extentOffset,
+    );
+    final replaceString = '**$subString**';
+    final baseOffset = controller.selection.baseOffset;
+    controller.text = controller.text.replaceRange(
+      controller.selection.baseOffset,
+      controller.selection.extentOffset,
+      replaceString,
+    );
+    final newOffset = subString.isEmpty
+        ? baseOffset + replaceString.length - 2
+        : baseOffset + replaceString.length;
+    controller.selection = TextSelection.collapsed(offset: newOffset);
+  }
+}
+
+class MakeItalicIntent extends Intent {
+  const MakeItalicIntent();
+}
+
+class MakeItalicAction extends Action<MakeItalicIntent> {
+  final TextEditingController controller;
+  MakeItalicAction(this.controller);
+  @override
+  void invoke(MakeItalicIntent intent) {
+    final subString = controller.text.substring(
+      controller.selection.baseOffset,
+      controller.selection.extentOffset,
+    );
+    final replaceString = '*$subString*';
+    final baseOffset = controller.selection.baseOffset;
+    controller.text = controller.text.replaceRange(
+      controller.selection.baseOffset,
+      controller.selection.extentOffset,
+      replaceString,
+    );
+    final newOffset = subString.isEmpty
+        ? baseOffset + replaceString.length - 1
+        : baseOffset + replaceString.length;
+    controller.selection = TextSelection.collapsed(offset: newOffset);
+  }
+}
+
 class PressEnterIntent extends Intent {
   const PressEnterIntent();
 }
@@ -183,12 +237,19 @@ class _MemoEditorState extends State<MemoEditor> {
       shortcuts: {
         LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyL):
             const MakeLinkIntent(),
+        LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyB):
+            const MakeBoldIntent(),
+        LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyI):
+            const MakeItalicIntent(),
         LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.enter):
             const PressEnterIntent(),
       },
       child: Actions(
         dispatcher: const ActionDispatcher(),
         actions: {
+          MakeLinkIntent: MakeLinkAction(_contentEditor),
+          MakeBoldIntent: MakeBoldAction(_contentEditor),
+          MakeItalicIntent: MakeItalicAction(_contentEditor),
           PressEnterIntent: PressEnterAction(_contentEditor),
         },
         child: Column(children: [
