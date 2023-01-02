@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 
 import 'package:file_picker/file_picker.dart';
@@ -188,7 +190,7 @@ class _MemoEditorState extends State<MemoEditor> {
       final menuItem = await showMenu<int>(
         context: context,
         items: [
-          const PopupMenuItem(child: Text('Upload'), value: 1),
+          const PopupMenuItem(value: 1, child: Text('Upload')),
         ],
         position: RelativeRect.fromSize(
           event.position & const Size(48.0, 48.0),
@@ -270,6 +272,7 @@ class _MemoEditorState extends State<MemoEditor> {
                 axis: Axis.horizontal,
                 initialFirstFraction: 0.5,
                 firstChild: Listener(
+                  onPointerDown: _onPointerDown,
                   child: TextField(
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
@@ -278,7 +281,6 @@ class _MemoEditorState extends State<MemoEditor> {
                       hintText: 'Enter contents in Markdown',
                     ),
                   ),
-                  onPointerDown: _onPointerDown,
                 ),
                 secondChild: MemoRendered(
                   content: _content,

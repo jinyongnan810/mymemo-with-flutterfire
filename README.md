@@ -11,6 +11,12 @@
 
 - check `launch.json` & `tasks.json`
 
+## Upgrade with
+
+```
+flutter pub upgrade --major-versions
+```
+
 ## Deployment to Firebase hosting
 
 ```

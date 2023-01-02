@@ -45,6 +45,9 @@ class MemoListPage extends StatelessWidget {
                   ? Consumer<Auth>(
                       builder: (ctx, auth, _) => auth.signedIn
                           ? Tooltip(
+                              message: K
+                                  .of(context)!
+                                  .loggedInHint(auth.myProfile.email),
                               child: Padding(
                                 padding: const EdgeInsets.only(left: 10),
                                 child: PopupMenuButton(
@@ -59,8 +62,8 @@ class MemoListPage extends StatelessWidget {
                                   },
                                   itemBuilder: (ctx) => [
                                     PopupMenuItem(
-                                      child: Text(K.of(context)!.logoutHint),
                                       value: 'signOut',
+                                      child: Text(K.of(context)!.logoutHint),
                                     ),
                                   ],
                                   child: CircleAvatar(
@@ -75,18 +78,15 @@ class MemoListPage extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              message: K
-                                  .of(context)!
-                                  .loggedInHint(auth.myProfile.email),
                             )
                           : Tooltip(
+                              message: K.of(context)!.loginHint,
                               child: IconButton(
                                 onPressed: () async {
                                   await auth.signIn();
                                 },
                                 icon: const Icon(Icons.person),
                               ),
-                              message: K.of(context)!.loginHint,
                             ),
                     )
                   : Container(),
@@ -107,13 +107,13 @@ class MemoListPage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(30),
                 ),
                 child: FloatingActionButton(
-                  child: const Icon(Icons.add),
                   backgroundColor: Colors.transparent,
                   foregroundColor: Colors.white,
                   elevation: 0,
                   onPressed: () {
-                    GoRouter.of(context).go('/memos/new');
+                    context.go('/memos/new');
                   },
+                  child: const Icon(Icons.add),
                 ),
               ),
             ),

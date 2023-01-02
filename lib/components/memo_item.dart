@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -22,24 +24,27 @@ class MemoItem extends StatelessWidget {
     return InkWell(
       highlightColor: Theme.of(context).primaryColor,
       borderRadius: BorderRadius.circular(10),
-      onTap: () => GoRouter.of(context).go('/memos/${memo.id}'),
+      onTap: () => context.go('/memos/${memo.id}'),
       child: Stack(
         children: [
-          Center(
-            child: Text(
-              memo.title,
-              style: const TextStyle(fontSize: 30),
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Center(
+              child: Text(
+                memo.title,
+                style: const TextStyle(fontSize: 30),
+              ),
             ),
           ),
           Container(
             alignment: Alignment.bottomLeft,
             padding: const EdgeInsets.only(bottom: 10, left: 10),
             child: Tooltip(
+              message: 'Updated at $fullDate',
               child: Text(
                 date,
                 style: const TextStyle(fontSize: 12),
               ),
-              message: 'Updated at $fullDate',
             ),
           ),
           Container(
@@ -52,6 +57,7 @@ class MemoItem extends StatelessWidget {
                   final photo = snapshot.data!.photoUrl;
 
                   return Tooltip(
+                    message: snapshot.data!.email,
                     child: Row(
                       children: [
                         photo == ''
@@ -70,13 +76,12 @@ class MemoItem extends StatelessWidget {
                         Text(snapshot.data!.displayName),
                       ],
                     ),
-                    message: snapshot.data!.email,
                   );
                 }
 
                 return const Tooltip(
-                  child: CircularProgressIndicator(),
                   message: 'Loading Profile...',
+                  child: CircularProgressIndicator(),
                 );
               },
             ),

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -130,7 +132,7 @@ class _MemoDetailPageState extends State<MemoDetailPage>
                     _editing = false;
                   });
                   if (isNewMemo) {
-                    GoRouter.of(context).go('/memos/${memo!.id}');
+                    context.go('/memos/${memo!.id}');
                   }
                 } else {
                   setState(() {
@@ -170,9 +172,9 @@ class _FadeThroughTransitionSwitcher extends StatelessWidget {
       transitionBuilder: (child, animation, secondaryAnimation) {
         return FadeThroughTransition(
           fillColor: fillColor,
-          child: child,
           animation: animation,
           secondaryAnimation: secondaryAnimation,
+          child: child,
         );
       },
       child: child,

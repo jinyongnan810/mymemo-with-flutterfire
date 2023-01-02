@@ -63,7 +63,7 @@ class MemoListSearchDelegate extends SearchDelegate {
               return ListTile(
                 title: Text(data[index].title),
                 onTap: () {
-                  GoRouter.of(context).go('/memos/${data[index].id}');
+                  context.go('/memos/${data[index].id}');
                   close(context, null);
                 },
               );

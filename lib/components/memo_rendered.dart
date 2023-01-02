@@ -17,7 +17,12 @@ class MemoRendered extends StatelessWidget {
       child: Markdown(
         // extensionSet: MarkdownExtensionSet.githubWeb.value,
         styleSheet: MarkdownStyleSheet.fromTheme(
-          Theme.of(context).copyWith(cardColor: Colors.transparent),
+          Theme.of(context).copyWith(
+            cardColor: Colors.transparent,
+            textTheme: Theme.of(context).textTheme.copyWith(
+                  bodyText2: const TextStyle(fontSize: 16),
+                ),
+          ),
         ),
         data: content,
         onTapLink: (text, url, title) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+// ignore: depend_on_referenced_packages
 import 'package:markdown/markdown.dart' as md;
 
 class CenteredHeaderBuilder extends MarkdownElementBuilder {

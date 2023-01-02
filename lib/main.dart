@@ -62,8 +62,7 @@ class MyApp extends StatelessWidget {
         onGenerateTitle: (ctx) => K.of(ctx)!.appTitle,
         scaffoldMessengerKey: scaffoldMessengerKey,
         theme: ThemeData.dark(),
-        routeInformationParser: _router.routeInformationParser,
-        routerDelegate: _router.routerDelegate,
+        routerConfig: _router,
         debugShowCheckedModeBanner: false,
         // after changing to .router, need change navigatorKey to scaffoldMessengerKey
         // navigatorKey: NavigationService.navigatorKey,
