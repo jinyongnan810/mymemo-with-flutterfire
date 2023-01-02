@@ -34,6 +34,14 @@ class MemoRendered extends StatelessWidget {
           'h1': CenteredHeaderBuilder(),
           'h2': CenteredHeaderBuilder(),
         },
+        imageBuilder: (uri, title, alt) {
+          return Center(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10.0),
+              child: Image.network(uri.toString()),
+            ),
+          );
+        },
       ),
     );
   }
