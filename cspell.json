@@ -5,5 +5,12 @@
     "/lib/firebase_options_*.dart",
     "/lib/shared/split.dart"
   ],
-  "enabledLanguageIds": ["dart", "swift", "kotlin"]
+  "enabledLanguageIds": [
+    "dart",
+    "swift",
+    "kotlin"
+  ],
+  "words": [
+    "riverpod"
+  ]
 }
