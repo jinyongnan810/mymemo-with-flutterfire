@@ -1,18 +1,17 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:go_router/go_router.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:mymemo_with_flutterfire/components/add_new_memo_button.dart';
 import 'package:mymemo_with_flutterfire/components/memo_list.dart';
-import 'package:mymemo_with_flutterfire/providers/auth.dart';
+import 'package:mymemo_with_flutterfire/components/my_user_profile.dart';
 import 'package:mymemo_with_flutterfire/shared/memo_list_search_delegate.dart';
-import 'package:provider/provider.dart';
 
-class MemoListPage extends StatelessWidget {
+class MemoListPage extends ConsumerWidget {
   static String routeName = '/';
-  const MemoListPage({Key? key}) : super(key: key);
+  const MemoListPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       decoration: const BoxDecoration(
         gradient: LinearGradient(
@@ -39,86 +38,10 @@ class MemoListPage extends StatelessWidget {
               icon: const Icon(Icons.search),
             ),
           ],
-          leading:
-              // currently only supports web
-              kIsWeb
-                  ? Consumer<Auth>(
-                      builder: (ctx, auth, _) => auth.signedIn
-                          ? Tooltip(
-                              message: K
-                                  .of(context)!
-                                  .loggedInHint(auth.myProfile.email),
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 10),
-                                child: PopupMenuButton(
-                                  tooltip: K
-                                      .of(context)!
-                                      .loggedInHint(auth.myProfile.email),
-                                  position: PopupMenuPosition.under,
-                                  onSelected: (value) async {
-                                    if (value == 'signOut') {
-                                      await auth.signOut();
-                                    }
-                                  },
-                                  itemBuilder: (ctx) => [
-                                    PopupMenuItem(
-                                      value: 'signOut',
-                                      child: Text(K.of(context)!.logoutHint),
-                                    ),
-                                  ],
-                                  child: CircleAvatar(
-                                    radius: 20,
-                                    // in AppBar, regular background image won't fit
-                                    // this way worked
-                                    child: ClipOval(
-                                      child: Image.network(
-                                        auth.myProfile.photoUrl,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            )
-                          : Tooltip(
-                              message: K.of(context)!.loginHint,
-                              child: IconButton(
-                                onPressed: () async {
-                                  await auth.signIn();
-                                },
-                                icon: const Icon(Icons.person),
-                              ),
-                            ),
-                    )
-                  : Container(),
+          leading: const MyUserProfile(),
         ),
         body: const MemoList(),
-        floatingActionButton: Visibility(
-          visible: kIsWeb,
-          child: Consumer<Auth>(
-            builder: (ctx, auth, _) => Visibility(
-              visible: auth.signedIn,
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [Colors.purple, Colors.orange],
-                  ),
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: FloatingActionButton(
-                  backgroundColor: Colors.transparent,
-                  foregroundColor: Colors.white,
-                  elevation: 0,
-                  onPressed: () {
-                    context.go('/memos/new');
-                  },
-                  child: const Icon(Icons.add),
-                ),
-              ),
-            ),
-          ),
-        ),
+        floatingActionButton: const AddNewMemoButton(),
       ),
     );
   }
