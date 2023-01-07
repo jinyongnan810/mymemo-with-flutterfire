@@ -3,14 +3,23 @@ import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:mymemo_with_flutterfire/models/memo.dart';
 
-class MemosNotifier extends StateNotifier<List<Memo>> {
+class MemosState {
+  final bool isLoading;
+  final List<Memo> memos;
+
+  MemosState({required this.isLoading, required this.memos});
+  MemosState copyWithIsLoading(bool isLoading) =>
+      MemosState(memos: memos, isLoading: isLoading);
+}
+
+class MemosNotifier extends StateNotifier<MemosState> {
   static int itemsPerPage = 20;
   DocumentSnapshot? lastFetchedDocument;
   String? nextPageToken;
-  MemosNotifier() : super([]);
+  MemosNotifier() : super(MemosState(isLoading: false, memos: []));
 
   Future<void> fetchFirstItems() async {
-    state.clear();
+    state = MemosState(isLoading: true, memos: []);
     debugPrint('fetchFirstItems');
     final res = await FirebaseFirestore.instance
         .collection('memos')
@@ -19,6 +28,7 @@ class MemosNotifier extends StateNotifier<List<Memo>> {
         .get();
     if (res.docs.isEmpty) {
       lastFetchedDocument = null;
+      state = MemosState(isLoading: false, memos: []);
 
       return;
     }
@@ -29,13 +39,15 @@ class MemosNotifier extends StateNotifier<List<Memo>> {
       return memo;
     });
     lastFetchedDocument = res.docs.last;
-    state.addAll(memos);
+    state = MemosState(isLoading: false, memos: [...state.memos, ...memos]);
   }
 
   Future<void> fetchNextItems() async {
     debugPrint('fetchNextItems');
+    state = state.copyWithIsLoading(true);
     if (lastFetchedDocument == null) {
       debugPrint('lastFetchedDocument is null');
+      state = state.copyWithIsLoading(false);
 
       return;
     }
@@ -57,23 +69,32 @@ class MemosNotifier extends StateNotifier<List<Memo>> {
       return memo;
     });
     lastFetchedDocument = res.docs.last;
-    state.addAll(memos);
+    state = MemosState(isLoading: false, memos: [...state.memos, ...memos]);
   }
 
   Future<Memo?> getItemById(String id) async {
-    final memoMatched = state.where((element) => element.id == id);
-    if (memoMatched.isEmpty) {
-      final memoSnapshot =
-          await FirebaseFirestore.instance.collection('memos').doc(id).get();
-      if (memoSnapshot.exists) {
-        final Memo memo = Memo.fromJson(id, memoSnapshot.data()!);
+    state = state.copyWithIsLoading(true);
+    try {
+      final memoMatched = state.memos.where((element) => element.id == id);
+      if (memoMatched.isEmpty) {
+        final memoSnapshot =
+            await FirebaseFirestore.instance.collection('memos').doc(id).get();
+        if (memoSnapshot.exists) {
+          final Memo memo = Memo.fromJson(id, memoSnapshot.data()!);
 
-        return memo;
+          return memo;
+        }
+
+        return null;
       }
 
-      return null;
-    }
+      return memoMatched.first;
+    } catch (e) {
+      debugPrint('Error fetching memo $id');
 
-    return memoMatched.first;
+      return null;
+    } finally {
+      state = state.copyWithIsLoading(false);
+    }
   }
 }

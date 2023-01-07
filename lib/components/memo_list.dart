@@ -1,26 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:mymemo_with_flutterfire/components/memo_item.dart';
-import 'package:mymemo_with_flutterfire/providers/memos.dart';
-import 'package:mymemo_with_flutterfire/shared/loading.dart';
-import 'package:provider/provider.dart';
+import 'package:mymemo_with_flutterfire/providers/memos_notifier_provider.dart';
 
-class MemoList extends StatefulWidget {
-  const MemoList({Key? key}) : super(key: key);
+class MemoList extends ConsumerStatefulWidget {
+  const MemoList({super.key});
 
   @override
-  State<MemoList> createState() => _MemoListState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _MemoListState();
 }
 
-class _MemoListState extends State<MemoList> {
-  late final Future<void>? _fetchFirstItems;
+class _MemoListState extends ConsumerState<MemoList> {
   late final ScrollController _scrollController;
   bool _loadingMore = false;
 
   @override
   void initState() {
     super.initState();
-    _fetchFirstItems =
-        Provider.of<Memos>(context, listen: false).fetchFirstItems();
+    ref.read(memosNotifierProvider.notifier).fetchFirstItems();
     _scrollController = ScrollController();
     _scrollController.addListener(() async {
       if (_scrollController.offset ==
@@ -29,8 +26,7 @@ class _MemoListState extends State<MemoList> {
         setState(() {
           _loadingMore = true;
         });
-        // await Future.delayed(const Duration(seconds: 5));
-        await Provider.of<Memos>(context, listen: false).fetchNextItems();
+        await ref.read(memosNotifierProvider.notifier).fetchNextItems();
         setState(() {
           _loadingMore = false;
         });
@@ -46,52 +42,35 @@ class _MemoListState extends State<MemoList> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _fetchFirstItems,
-      builder: (ctx, dataSnapshot) {
-        if (dataSnapshot.connectionState == ConnectionState.waiting) {
-          return const Loading();
-        } else {
-          if (dataSnapshot.error != null) {
-            debugPrint(dataSnapshot.error.toString());
-            // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            //   content: Text('Error loading the memos.Please refresh again.'),
-            //   duration: Duration(seconds: 5),
-            // ));
-          }
+    final memosState = ref.watch(memosNotifierProvider);
 
-          return Consumer<Memos>(
-            builder: (ctx, memos, _) => Column(
+    return Column(
+      children: [
+        Expanded(child: LayoutBuilder(
+          builder: ((context, constraints) {
+            int cols = constraints.maxWidth > 1200
+                ? 4
+                : constraints.maxWidth > 600
+                    ? 3
+                    : 2;
+
+            return GridView.count(
+              crossAxisCount: cols,
+              controller: _scrollController,
               children: [
-                Expanded(child: LayoutBuilder(
-                  builder: ((context, constraints) {
-                    int cols = constraints.maxWidth > 1200
-                        ? 4
-                        : constraints.maxWidth > 600
-                            ? 3
-                            : 2;
-
-                    return GridView.count(
-                      crossAxisCount: cols,
-                      controller: _scrollController,
-                      children: [
-                        ...memos.items.map((memo) => MemoItem(memo)),
-                      ],
-                    );
-                  }),
-                )),
-                if (_loadingMore)
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  ),
+                ...memosState.memos.map((memo) => MemoItem(memo)),
               ],
+            );
+          }),
+        )),
+        if (_loadingMore)
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Center(
+              child: CircularProgressIndicator(),
             ),
-          );
-        }
-      },
+          ),
+      ],
     );
   }
 }
