@@ -42,6 +42,7 @@ class Memo {
     );
   }
   Future<void> save() async {
+    // TODO: link with MemosNotifier
     final now = DateTime.now().millisecondsSinceEpoch;
     if (kIsWeb || !Platform.isWindows) {
       debugPrint('not windows desktop');

@@ -7,11 +7,12 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:mymemo_with_flutterfire/components/memo_rendered.dart';
 import 'package:mymemo_with_flutterfire/models/memo.dart';
-import 'package:mymemo_with_flutterfire/providers/auth.dart';
+import 'package:mymemo_with_flutterfire/providers/user_id_provider.dart';
 import 'package:mymemo_with_flutterfire/shared/split.dart';
-import 'package:provider/provider.dart';
+import 'package:mymemo_with_flutterfire/typedef.dart';
 import 'package:uuid/uuid.dart';
 
 class MakeLinkIntent extends Intent {
@@ -122,16 +123,16 @@ class PressEnterAction extends Action<PressEnterIntent> {
   }
 }
 
-class MemoEditor extends StatefulWidget {
+class MemoEditor extends StatefulHookConsumerWidget {
   final Memo memo;
 
   const MemoEditor({Key? key, required this.memo}) : super(key: key);
 
   @override
-  State<MemoEditor> createState() => _MemoEditorState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _MemoEditorState();
 }
 
-class _MemoEditorState extends State<MemoEditor> {
+class _MemoEditorState extends ConsumerState<MemoEditor> {
   String _title = '';
   String _content = '';
   final TextEditingController _titleEditor = TextEditingController();
@@ -181,10 +182,13 @@ class _MemoEditorState extends State<MemoEditor> {
     _contentEditor.selection = TextSelection.collapsed(offset: newOffset);
   }
 
-  Future<void> _onPointerDown(PointerDownEvent event) async {
+  Future<void> _onPointerDown(PointerDownEvent event, UserId? userId) async {
     // Check if right mouse button clicked
     if (event.kind == PointerDeviceKind.mouse &&
         event.buttons == kSecondaryMouseButton) {
+      if (userId == null) {
+        return;
+      }
       final overlay =
           Overlay.of(context)?.context.findRenderObject() as RenderBox;
       final menuItem = await showMenu<int>(
@@ -205,7 +209,6 @@ class _MemoEditorState extends State<MemoEditor> {
             final fileBytes = result.files.first.bytes;
             final ext = result.files.first.extension;
             final fileName = result.files.first.name;
-            final userId = Provider.of<Auth>(context, listen: false).userId;
             final uuid = const Uuid().v4();
             final ref =
                 FirebaseStorage.instance.ref('uploads/$userId/$uuid.$ext');
@@ -235,6 +238,8 @@ class _MemoEditorState extends State<MemoEditor> {
 
   @override
   Widget build(BuildContext context) {
+    final userId = ref.read(userIdProvider);
+
     return Shortcuts(
       shortcuts: {
         LogicalKeySet(LogicalKeyboardKey.control, LogicalKeyboardKey.keyL):
@@ -272,7 +277,7 @@ class _MemoEditorState extends State<MemoEditor> {
                 axis: Axis.horizontal,
                 initialFirstFraction: 0.5,
                 firstChild: Listener(
-                  onPointerDown: _onPointerDown,
+                  onPointerDown: (e) => _onPointerDown(e, userId),
                   child: TextField(
                     keyboardType: TextInputType.multiline,
                     maxLines: null,

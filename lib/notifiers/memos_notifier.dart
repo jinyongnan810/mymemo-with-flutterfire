@@ -97,4 +97,16 @@ class MemosNotifier extends StateNotifier<MemosState> {
       state = state.copyWithIsLoading(false);
     }
   }
+
+  void addItem(Memo memo) {
+    state =
+        MemosState(isLoading: state.isLoading, memos: [memo, ...state.memos]);
+  }
+
+  void deleteItem(Memo memo) {
+    state = MemosState(
+      isLoading: state.isLoading,
+      memos: state.memos.where((m) => m.id != memo.id).toList(),
+    );
+  }
 }
