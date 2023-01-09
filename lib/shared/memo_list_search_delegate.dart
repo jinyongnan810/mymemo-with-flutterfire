@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mymemo_with_flutterfire/models/memo.dart';
-import 'package:mymemo_with_flutterfire/providers/memos.dart';
 import 'package:mymemo_with_flutterfire/shared/loading.dart';
 
 class MemoListSearchDelegate extends SearchDelegate {
@@ -34,7 +33,9 @@ class MemoListSearchDelegate extends SearchDelegate {
   @override
   Widget buildResults(BuildContext context) {
     return FutureBuilder(
-      future: Memos.queryItems(query),
+      future: Future.value(<Memo>[]),
+      // TODO: fix search
+      // future: Memos.queryItems(query),
       builder: (ctx, AsyncSnapshot<List<Memo>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Loading();

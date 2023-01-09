@@ -103,6 +103,13 @@ class MemosNotifier extends StateNotifier<MemosState> {
         MemosState(isLoading: state.isLoading, memos: [memo, ...state.memos]);
   }
 
+  void updateItem(Memo memo) {
+    state = MemosState(
+      isLoading: state.isLoading,
+      memos: [memo, ...state.memos.where((m) => m.id != memo.id)],
+    );
+  }
+
   void deleteItem(Memo memo) {
     state = MemosState(
       isLoading: state.isLoading,

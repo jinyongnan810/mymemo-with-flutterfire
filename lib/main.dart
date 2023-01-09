@@ -8,9 +8,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:mymemo_with_flutterfire/components/loading/loading_screen.dart';
 import 'package:mymemo_with_flutterfire/firebase_options.dart';
 import 'package:mymemo_with_flutterfire/pages/memo_detail.dart';
 import 'package:mymemo_with_flutterfire/pages/memo_list.dart';
+import 'package:mymemo_with_flutterfire/providers/is_loading_provider.dart';
 import 'package:mymemo_with_flutterfire/shared/show_snackbar.dart';
 
 Future<void> main() async {
@@ -29,7 +31,19 @@ class MyApp extends StatelessWidget {
   static final _router = GoRouter(routes: [
     GoRoute(
       path: '/',
-      builder: (context, state) => const MemoListPage(),
+      builder: (context, state) {
+        return Consumer(builder: (ctx, ref, child) {
+          ref.listen(isLoadingProvider, (previous, next) {
+            if (previous != null && next == true) {
+              LoadingScreen.instance().show(context: ctx, text: "Loading");
+            } else if (previous == true && next == false) {
+              LoadingScreen.instance().hide();
+            }
+          });
+
+          return const MemoListPage();
+        });
+      },
       routes: [
         GoRoute(
           path: 'memos/:id',

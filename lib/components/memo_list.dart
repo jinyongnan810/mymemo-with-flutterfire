@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+// ignore: depend_on_referenced_packages
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:mymemo_with_flutterfire/components/memo_item.dart';
 import 'package:mymemo_with_flutterfire/providers/memos_notifier_provider.dart';
 
-class MemoList extends ConsumerStatefulWidget {
+class MemoList extends StatefulHookConsumerWidget {
   const MemoList({super.key});
 
   @override
@@ -17,7 +19,6 @@ class _MemoListState extends ConsumerState<MemoList> {
   @override
   void initState() {
     super.initState();
-    ref.read(memosNotifierProvider.notifier).fetchFirstItems();
     _scrollController = ScrollController();
     _scrollController.addListener(() async {
       if (_scrollController.offset ==
@@ -43,6 +44,15 @@ class _MemoListState extends ConsumerState<MemoList> {
   @override
   Widget build(BuildContext context) {
     final memosState = ref.watch(memosNotifierProvider);
+    useEffect(
+      () {
+        // TODO: fix fetching memos
+        // ref.read(memosNotifierProvider.notifier).fetchFirstItems();
+
+        return null;
+      },
+      [],
+    );
 
     return Column(
       children: [

@@ -7,7 +7,7 @@ import 'package:mymemo_with_flutterfire/shared/show_snackbar.dart';
 import 'package:mymemo_with_flutterfire/typedef.dart';
 import 'package:mymemo_with_flutterfire/utils/firestore_util.dart';
 
-final loggedInStatusProvider = StreamProvider.autoDispose<IsLoggedIn>((ref) {
+final loggedInStatusProvider = StreamProvider<IsLoggedIn>((ref) {
   final controller = StreamController<IsLoggedIn>();
   controller.sink.add(false);
   final subscription =

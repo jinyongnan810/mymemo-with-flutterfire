@@ -133,6 +133,7 @@ class MemoEditor extends StatefulHookConsumerWidget {
 }
 
 class _MemoEditorState extends ConsumerState<MemoEditor> {
+  // TODO: use hooks
   String _title = '';
   String _content = '';
   final TextEditingController _titleEditor = TextEditingController();
