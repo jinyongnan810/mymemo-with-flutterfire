@@ -73,7 +73,8 @@ class MemosNotifier extends StateNotifier<MemosState> {
   }
 
   Future<Memo?> getItemById(String id) async {
-    state = state.copyWithIsLoading(true);
+    // FIXME: cannot set state
+    // state = state.copyWithIsLoading(true);
     try {
       final memoMatched = state.memos.where((element) => element.id == id);
       if (memoMatched.isEmpty) {
@@ -93,8 +94,6 @@ class MemosNotifier extends StateNotifier<MemosState> {
       debugPrint('Error fetching memo $id');
 
       return null;
-    } finally {
-      state = state.copyWithIsLoading(false);
     }
   }
 

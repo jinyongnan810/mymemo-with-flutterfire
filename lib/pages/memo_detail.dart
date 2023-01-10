@@ -26,7 +26,7 @@ class _MemoDetailPageState extends ConsumerState<MemoDetailPage> {
   Memo? memo;
   @override
   Widget build(BuildContext context) {
-    final futureMemo = ref.read(memoProvider(widget.id));
+    final futureMemo = ref.watch(memoProvider(widget.id));
     final myUserId = ref.watch(userIdProvider);
 
     return futureMemo.when(
