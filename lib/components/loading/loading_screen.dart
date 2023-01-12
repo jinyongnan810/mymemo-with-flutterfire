@@ -75,7 +75,10 @@ class LoadingScreen {
                           return Text(
                             snapshot.requireData,
                             textAlign: TextAlign.center,
-                            style: const TextStyle(color: Colors.black),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 30,
+                            ),
                           );
                         }
 

@@ -33,10 +33,10 @@ class MyApp extends StatelessWidget {
       path: '/',
       builder: (context, state) {
         return Consumer(builder: (ctx, ref, child) {
-          ref.listen(isLoadingProvider, (previous, next) {
-            if (previous != null && next == true) {
-              LoadingScreen.instance().show(context: ctx, text: "Loading");
-            } else if (previous == true && next == false) {
+          ref.listen<String?>(isLoadingProvider, (previous, next) {
+            if (next != null) {
+              LoadingScreen.instance().show(context: ctx, text: next);
+            } else if (next == null) {
               LoadingScreen.instance().hide();
             }
           });
