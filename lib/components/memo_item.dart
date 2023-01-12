@@ -20,7 +20,7 @@ class MemoItem extends ConsumerWidget {
     final shortDate = DateFormat('MM/dd H:m').format(updatedAt);
     final date = (updatedAt.year == DateTime.now().year) ? shortDate : fullDate;
 
-    final user = ref.read(userInfoProvider(memo.userId));
+    final user = ref.watch(userInfoProvider(memo.userId));
     final myUserId = ref.watch(userIdProvider);
 
     final avatar = user.when(
