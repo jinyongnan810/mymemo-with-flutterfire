@@ -7,6 +7,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+// ignore: depend_on_referenced_packages
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:mymemo_with_flutterfire/components/memo_rendered.dart';
 import 'package:mymemo_with_flutterfire/models/memo.dart';
@@ -123,67 +125,34 @@ class PressEnterAction extends Action<PressEnterIntent> {
   }
 }
 
-class MemoEditor extends StatefulHookConsumerWidget {
+class MemoEditor extends HookConsumerWidget {
   final Memo memo;
 
   const MemoEditor({Key? key, required this.memo}) : super(key: key);
 
-  @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _MemoEditorState();
-}
-
-class _MemoEditorState extends ConsumerState<MemoEditor> {
-  // TODO: use hooks
-  String _title = '';
-  String _content = '';
-  final TextEditingController _titleEditor = TextEditingController();
-  final TextEditingController _contentEditor = TextEditingController();
-  @override
-  void initState() {
-    _title = widget.memo.title;
-    _titleEditor.text = widget.memo.title;
-    _content = widget.memo.content;
-    _contentEditor.text = widget.memo.content;
-    _contentEditor.addListener(() {
-      setState(() {
-        _content = _contentEditor.text;
-      });
-      widget.memo.content = _content;
-    });
-    _titleEditor.addListener(() {
-      setState(() {
-        _title = _titleEditor.text;
-      });
-      widget.memo.title = _title;
-    });
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _titleEditor.dispose();
-    _contentEditor.dispose();
-    super.dispose();
-  }
-
-  void _insertImage(String url) async {
-    String subString = _contentEditor.text.substring(
-      _contentEditor.selection.baseOffset,
-      _contentEditor.selection.extentOffset,
+  void _insertImage(String url, TextEditingController contentEditor) async {
+    String subString = contentEditor.text.substring(
+      contentEditor.selection.baseOffset,
+      contentEditor.selection.extentOffset,
     );
     if (subString.isEmpty) subString = 'image';
     final replaceString = '![$subString]($url)';
-    final baseOffset = _contentEditor.selection.baseOffset;
-    _contentEditor.text = _contentEditor.text.replaceRange(
-      _contentEditor.selection.baseOffset,
-      _contentEditor.selection.extentOffset,
+    final baseOffset = contentEditor.selection.baseOffset;
+    contentEditor.text = contentEditor.text.replaceRange(
+      contentEditor.selection.baseOffset,
+      contentEditor.selection.extentOffset,
       replaceString,
     );
     final newOffset = baseOffset + replaceString.length;
-    _contentEditor.selection = TextSelection.collapsed(offset: newOffset);
+    contentEditor.selection = TextSelection.collapsed(offset: newOffset);
   }
 
-  Future<void> _onPointerDown(PointerDownEvent event, UserId? userId) async {
+  Future<void> _onPointerDown(
+    PointerDownEvent event,
+    BuildContext context,
+    TextEditingController contentEditor,
+    UserId? userId,
+  ) async {
     // Check if right mouse button clicked
     if (event.kind == PointerDeviceKind.mouse &&
         event.buttons == kSecondaryMouseButton) {
@@ -219,7 +188,7 @@ class _MemoEditorState extends ConsumerState<MemoEditor> {
                 SettableMetadata(contentType: 'image/*'),
               );
               final downloadLink = await ref.getDownloadURL();
-              _insertImage(downloadLink);
+              _insertImage(downloadLink, contentEditor);
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                 content: Text('Successfully uploaded $fileName'),
               ));
@@ -238,8 +207,27 @@ class _MemoEditorState extends ConsumerState<MemoEditor> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final userId = ref.read(userIdProvider);
+    final titleEditor = useTextEditingController(text: memo.title);
+    final contentEditor = useTextEditingController(text: memo.content);
+    final title = useState(titleEditor.text);
+    final content = useState(contentEditor.text);
+    useEffect(
+      () {
+        titleEditor.addListener(() {
+          title.value = titleEditor.text;
+          memo.title = title.value;
+        });
+        contentEditor.addListener(() {
+          content.value = contentEditor.text;
+          memo.content = content.value;
+        });
+
+        return null;
+      },
+      [titleEditor, contentEditor],
+    );
 
     return Shortcuts(
       shortcuts: {
@@ -255,16 +243,16 @@ class _MemoEditorState extends ConsumerState<MemoEditor> {
       child: Actions(
         dispatcher: const ActionDispatcher(),
         actions: {
-          MakeLinkIntent: MakeLinkAction(_contentEditor),
-          MakeBoldIntent: MakeBoldAction(_contentEditor),
-          MakeItalicIntent: MakeItalicAction(_contentEditor),
-          PressEnterIntent: PressEnterAction(_contentEditor),
+          MakeLinkIntent: MakeLinkAction(contentEditor),
+          MakeBoldIntent: MakeBoldAction(contentEditor),
+          MakeItalicIntent: MakeItalicAction(contentEditor),
+          PressEnterIntent: PressEnterAction(contentEditor),
         },
         child: Column(children: [
           Padding(
             padding: const EdgeInsets.only(top: 50),
             child: TextField(
-              controller: _titleEditor,
+              controller: titleEditor,
               decoration: const InputDecoration(
                 hintText: 'Enter title',
               ),
@@ -278,18 +266,19 @@ class _MemoEditorState extends ConsumerState<MemoEditor> {
                 axis: Axis.horizontal,
                 initialFirstFraction: 0.5,
                 firstChild: Listener(
-                  onPointerDown: (e) => _onPointerDown(e, userId),
+                  onPointerDown: (e) =>
+                      _onPointerDown(e, context, contentEditor, userId),
                   child: TextField(
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
-                    controller: _contentEditor,
+                    controller: contentEditor,
                     decoration: const InputDecoration(
                       hintText: 'Enter contents in Markdown',
                     ),
                   ),
                 ),
                 secondChild: MemoRendered(
-                  content: _content,
+                  content: content.value,
                   withPadding: false,
                 ),
               ),
