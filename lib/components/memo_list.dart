@@ -33,7 +33,8 @@ class _MemoListState extends ConsumerState<MemoList> {
       }
     });
     () async {
-      await Future.delayed(const Duration(seconds: 1));
+      // this line prevents error
+      await Future.delayed(const Duration(seconds: 0));
       await ref.read(memosNotifierProvider.notifier).fetchFirstItems();
     }();
   }
