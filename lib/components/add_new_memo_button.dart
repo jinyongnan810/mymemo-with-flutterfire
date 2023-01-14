@@ -26,7 +26,6 @@ class AddNewMemoButton extends ConsumerWidget {
                 foregroundColor: Colors.white,
                 elevation: 0,
                 onPressed: () {
-                  // FIXME: create new memo
                   context.go('/memos/new');
                 },
                 child: const Icon(Icons.add),
