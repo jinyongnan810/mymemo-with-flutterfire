@@ -20,7 +20,7 @@ class MemoRendered extends StatelessWidget {
           Theme.of(context).copyWith(
             cardColor: Colors.transparent,
             textTheme: Theme.of(context).textTheme.copyWith(
-                  bodyText2: const TextStyle(fontSize: 16),
+                  bodyMedium: const TextStyle(fontSize: 16),
                 ),
           ),
         ),

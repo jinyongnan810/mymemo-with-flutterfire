@@ -5,6 +5,7 @@ import 'package:markdown/markdown.dart' as md;
 
 class CenteredHeaderBuilder extends MarkdownElementBuilder {
   @override
+  // ignore: long-method
   Widget visitText(md.Text text, TextStyle? preferredStyle) {
     return Padding(
       padding: const EdgeInsets.only(top: 15, bottom: 7),
@@ -22,8 +23,6 @@ class CenteredHeaderBuilder extends MarkdownElementBuilder {
             child: SelectableText(
               text.text,
               style: preferredStyle,
-              showCursor: true,
-              toolbarOptions: const ToolbarOptions(copy: true),
             ),
           ),
           const Expanded(

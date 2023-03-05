@@ -160,7 +160,7 @@ class MemoEditor extends HookConsumerWidget {
         return;
       }
       final overlay =
-          Overlay.of(context)?.context.findRenderObject() as RenderBox;
+          Overlay.of(context).context.findRenderObject() as RenderBox;
       final menuItem = await showMenu<int>(
         context: context,
         items: [

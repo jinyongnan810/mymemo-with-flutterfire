@@ -94,7 +94,7 @@ class LoadingScreen {
       ),
     );
     final state = Overlay.of(context);
-    state?.insert(overlay);
+    state.insert(overlay);
 
     return LoadingScreenController(
       close: () {
