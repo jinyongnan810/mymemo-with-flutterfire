@@ -35,6 +35,7 @@ firebase deploy --only=hosting
 ## Todos
 
 - link video
+  - cannot find a proper package to generate thumbnail in web
 - link, img header style
 - github workflow
 - support for backticks
