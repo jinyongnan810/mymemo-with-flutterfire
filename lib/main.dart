@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
         GoRoute(
           path: 'memos/:id',
           builder: (context, state) {
-            final id = state.params['id']!;
+            final id = state.pathParameters['id']!;
 
             return MemoDetailPage(id: id);
           },
