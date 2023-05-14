@@ -34,12 +34,10 @@ firebase deploy --only=hosting
 
 ## Todos
 
+- link video
 - link, img header style
 - github workflow
 - support for backticks
-- upload images by paste
-- find memos
-- search in app bar, sliver app bar
-  - https://www.youtube.com/watch?v=TlbbIQykHK0
+- upload images by paste or by drop
 - fix scroll in mobile devices
 - make a vertical version of the split widget
