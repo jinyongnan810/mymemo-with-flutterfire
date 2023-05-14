@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_highlight/flutter_highlight.dart';
-import 'package:flutter_highlight/themes/atom-one-light.dart';
 import 'package:flutter_highlight/themes/ocean.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -39,11 +38,7 @@ class CodeBuilder extends MarkdownElementBuilder {
 
             // Specify highlight theme
             // All available themes are listed in `themes` folder
-            theme: MediaQueryData.fromWindow(WidgetsBinding.instance.window)
-                        .platformBrightness ==
-                    Brightness.light
-                ? oceanTheme
-                : atomOneLightTheme,
+            theme: oceanTheme,
 
             // Specify padding
             padding: const EdgeInsets.all(8),

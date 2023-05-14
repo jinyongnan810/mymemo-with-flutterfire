@@ -18,11 +18,11 @@ analyzer:
     - "**/*.gen.dart"
     - "lib/firebase_options_*.dart"
     - "lib/shared/split.dart"
-  strong-mode:
-    implicit-casts: false
     # implicit-dynamic: false
   errors:
     invalid_annotation_target: ignore
+  language:
+    strict-casts: true
 
 linter:
   # The lint rules applied to this project can be customized in the
