@@ -11,6 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:mymemo_with_flutterfire/components/memo_rendered.dart';
+import 'package:mymemo_with_flutterfire/components/video_uploader.dart';
 import 'package:mymemo_with_flutterfire/models/memo.dart';
 import 'package:mymemo_with_flutterfire/providers/user_id_provider.dart';
 import 'package:mymemo_with_flutterfire/shared/split.dart';
@@ -147,6 +148,7 @@ class MemoEditor extends HookConsumerWidget {
     contentEditor.selection = TextSelection.collapsed(offset: newOffset);
   }
 
+  // ignore: long-method
   Future<void> _onPointerDown(
     PointerDownEvent event,
     BuildContext context,
@@ -164,7 +166,8 @@ class MemoEditor extends HookConsumerWidget {
       final menuItem = await showMenu<int>(
         context: context,
         items: [
-          const PopupMenuItem(value: 1, child: Text('Upload')),
+          const PopupMenuItem(value: 1, child: Text('Upload Image')),
+          const PopupMenuItem(value: 2, child: Text('Upload Video')),
         ],
         position: RelativeRect.fromSize(
           event.position & const Size(48.0, 48.0),
@@ -200,6 +203,15 @@ class MemoEditor extends HookConsumerWidget {
               debugPrint(e.toString());
             }
           }
+          break;
+        case 2:
+          showDialog(
+            context: context,
+            barrierDismissible: true,
+            builder: (ctx) {
+              return const VideoUploader();
+            },
+          );
           break;
         default:
       }
