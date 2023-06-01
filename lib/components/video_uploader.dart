@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cross_file/cross_file.dart';
 import 'package:flutter/material.dart';
 import 'package:mymemo_with_flutterfire/components/file_dropper.dart';
 
@@ -11,8 +12,8 @@ class VideoUploader extends StatefulWidget {
 }
 
 class _VideoUploaderState extends State<VideoUploader> {
-  File? _video;
-  File? _thumbnail;
+  _FileAndName? _video;
+  _FileAndName? _thumbnail;
   final bool _isUploading = false;
   @override
   Widget build(BuildContext context) {
@@ -22,8 +23,8 @@ class _VideoUploaderState extends State<VideoUploader> {
         mainAxisSize: MainAxisSize.min,
         children: [
           FileDropper(onDroppedFiles: onDroppedFiles),
-          Text('Video: ${_video?.path ?? 'None'}'),
-          Text('Thumbnail: ${_thumbnail?.path ?? 'None'}'),
+          Text('Video: ${_video?.name ?? 'None'}'),
+          Text('Thumbnail: ${_thumbnail?.name ?? 'None'}'),
         ],
       ),
       actions: [
@@ -39,18 +40,28 @@ class _VideoUploaderState extends State<VideoUploader> {
     );
   }
 
-  void onDroppedFiles(List<File> files) {
+  void onDroppedFiles(List<XFile> files) {
     // TODO: onDroppedFiles: [File: 'blob:http://localhost:1234/1e125af7-43ee-4d20-8199-50ddcb526e88', File: 'blob:http://localhost:1234/ec57b7a5-f60f-4875-93e3-92dc8d086544']
     debugPrint('onDroppedFiles: $files');
     final videos =
-        files.where((file) => ['.mp4', '.mov'].any(file.path.endsWith));
+        files.where((file) => ['.mp4', '.mov'].any(file.name.endsWith));
     final pictures =
-        files.where((file) => ['.png', '.jpg'].any(file.path.endsWith));
+        files.where((file) => ['.png', '.jpg'].any(file.name.endsWith));
     debugPrint(videos.toString());
     debugPrint(pictures.toString());
     setState(() {
-      _video = videos.isNotEmpty ? videos.first : null;
-      _thumbnail = pictures.isNotEmpty ? pictures.first : null;
+      _video = videos.isNotEmpty
+          ? _FileAndName(File(videos.first.path), videos.first.name)
+          : null;
+      _thumbnail = pictures.isNotEmpty
+          ? _FileAndName(File(pictures.first.path), pictures.first.name)
+          : null;
     });
   }
+}
+
+class _FileAndName {
+  _FileAndName(this.file, this.name);
+  final File file;
+  final String name;
 }

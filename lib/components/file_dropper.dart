@@ -1,12 +1,11 @@
-import 'dart:io';
-
+import 'package:cross_file/cross_file.dart';
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 
 class FileDropper extends StatelessWidget {
   const FileDropper({super.key, required this.onDroppedFiles});
-  final void Function(List<File>) onDroppedFiles;
+  final void Function(List<XFile>) onDroppedFiles;
 
   @override
   Widget build(BuildContext context) {
@@ -21,8 +20,7 @@ class FileDropper extends StatelessWidget {
         radius: const Radius.circular(20),
         child: DropTarget(
           onDragDone: (details) {
-            print('onDragDone: ${details.files}');
-            final files = details.files.map((e) => File(e.path)).toList();
+            final files = details.files;
             onDroppedFiles(files);
           },
           onDragEntered: (details) {},
