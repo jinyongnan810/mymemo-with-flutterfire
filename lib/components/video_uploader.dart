@@ -2,21 +2,27 @@ import 'dart:io';
 
 import 'package:cross_file/cross_file.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:mymemo_with_flutterfire/components/file_dropper.dart';
+import 'package:mymemo_with_flutterfire/providers/user_id_provider.dart';
+import 'package:mymemo_with_flutterfire/utils/storage_util.dart';
+import 'package:path/path.dart';
 
-class VideoUploader extends StatefulWidget {
+class VideoUploader extends ConsumerStatefulWidget {
   const VideoUploader({super.key});
 
   @override
-  State<VideoUploader> createState() => _VideoUploaderState();
+  ConsumerState<VideoUploader> createState() => _VideoUploaderState();
 }
 
-class _VideoUploaderState extends State<VideoUploader> {
+class _VideoUploaderState extends ConsumerState<VideoUploader> {
   _FileAndName? _video;
   _FileAndName? _thumbnail;
-  final bool _isUploading = false;
+  bool _isUploading = false;
   @override
   Widget build(BuildContext context) {
+    final userId = ref.watch(userIdProvider);
+
     return AlertDialog(
       title: const Text('Upload Video'),
       content: Column(
@@ -29,12 +35,26 @@ class _VideoUploaderState extends State<VideoUploader> {
       ),
       actions: [
         TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('OK'),
+          onPressed: _isUploading
+              ? null
+              : () async {
+                  final link = await upload(userId);
+                  if (link == null) {
+                    return;
+                  }
+                  debugPrint('link: $link');
+                  if (!mounted) {
+                    return;
+                  }
+                  Navigator.of(context).pop(link);
+                },
+          child: _isUploading
+              ? const CircularProgressIndicator()
+              : const Text('OK'),
         ),
         TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('Cancel'),
+          onPressed: _isUploading ? null : () => Navigator.pop(context),
+          child: _isUploading ? const SizedBox.shrink() : const Text('Cancel'),
         ),
       ],
     );
@@ -57,6 +77,26 @@ class _VideoUploaderState extends State<VideoUploader> {
           ? _FileAndName(File(pictures.first.path), pictures.first.name)
           : null;
     });
+  }
+
+  Future<String?> upload(String? userId) async {
+    if (_video == null || _thumbnail == null || userId == null) {
+      return null;
+    }
+    setState(() {
+      _isUploading = true;
+    });
+    final videoExt = extension(_video!.name);
+    final videoLink =
+        await StorageUtil.upload(userId, _video!.file, videoExt, false);
+    // TODO: handle failed
+    final imageExt = extension(_thumbnail!.name);
+    final thumbnailLink =
+        await StorageUtil.upload(userId, _thumbnail!.file, imageExt, true);
+    setState(() {
+      _isUploading = false;
+    });
+    return '[![IMAGE]($thumbnailLink)]($videoLink)';
   }
 }
 

@@ -4,8 +4,13 @@ service firebase.storage {
       match /{userId}/{allPaths=**} {
         allow read: if true;
         allow write: if request.auth.uid == userId
-        						&& request.resource.size < 5 * 1024 * 1024
-                   && request.resource.contentType.matches('image/.*')
+        						&& (
+                      (request.resource.size < 5 * 1024 * 1024
+                        && request.resource.contentType.matches('image/.*')) 
+                      || 
+                      (request.resource.size < 50 * 1024 * 1024
+                        && request.resource.contentType.matches('video/.*'))
+                   )
       }
     }
   }
