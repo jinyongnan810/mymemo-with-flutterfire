@@ -61,8 +61,6 @@ class _VideoUploaderState extends ConsumerState<VideoUploader> {
   }
 
   void onDroppedFiles(List<XFile> files) {
-    // TODO: onDroppedFiles: [File: 'blob:http://localhost:1234/1e125af7-43ee-4d20-8199-50ddcb526e88', File: 'blob:http://localhost:1234/ec57b7a5-f60f-4875-93e3-92dc8d086544']
-    debugPrint('onDroppedFiles: $files');
     final videos =
         files.where((file) => ['.mp4', '.mov'].any(file.name.endsWith));
     final pictures =
@@ -93,8 +91,9 @@ class _VideoUploaderState extends ConsumerState<VideoUploader> {
       _isUploading = false;
     });
 
-    // TODO: gets correct link but cannot download when rendered in markdown
+    // MEMO: gets correct link but cannot download when rendered in markdown
     // because markdown automatically replaces %2F with /
+    // workaround with reverting to original in Markdown.onTapLink
     return '[![IMAGE]($thumbnailLink)]($videoLink)';
   }
 }

@@ -205,6 +205,7 @@ class MemoEditor extends HookConsumerWidget {
           }
           break;
         case 2:
+          // TODO: insert to markdown
           showDialog(
             context: context,
             barrierDismissible: true,

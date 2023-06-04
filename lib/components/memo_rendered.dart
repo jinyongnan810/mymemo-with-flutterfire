@@ -26,7 +26,22 @@ class MemoRendered extends StatelessWidget {
         ),
         data: content,
         onTapLink: (text, url, title) {
-          url != null ? launchUrlString(url) : null;
+          if (url == null) {
+            return;
+          }
+          if (url.startsWith('https://firebasestorage.googleapis.com'
+              '/v0/b/mymemo-98f76.appspot.com/o/uploads')) {
+            final prefixAndRest = url.split('uploads');
+            if (prefixAndRest.length != 2) {
+              return;
+            }
+            final prefix = '${prefixAndRest[0]}uploads';
+            final rest = prefixAndRest[1].replaceAll('/', '%2F');
+            launchUrlString(prefix + rest);
+
+            return;
+          }
+          launchUrlString(url);
         },
         selectable: true,
         builders: {
