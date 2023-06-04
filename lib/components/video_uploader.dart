@@ -1,4 +1,4 @@
-import 'dart:io';
+// ignore_for_file: depend_on_referenced_packages
 
 import 'package:cross_file/cross_file.dart';
 import 'package:flutter/material.dart';
@@ -16,8 +16,8 @@ class VideoUploader extends ConsumerStatefulWidget {
 }
 
 class _VideoUploaderState extends ConsumerState<VideoUploader> {
-  _FileAndName? _video;
-  _FileAndName? _thumbnail;
+  XFile? _video;
+  XFile? _thumbnail;
   bool _isUploading = false;
   @override
   Widget build(BuildContext context) {
@@ -70,12 +70,8 @@ class _VideoUploaderState extends ConsumerState<VideoUploader> {
     debugPrint(videos.toString());
     debugPrint(pictures.toString());
     setState(() {
-      _video = videos.isNotEmpty
-          ? _FileAndName(File(videos.first.path), videos.first.name)
-          : null;
-      _thumbnail = pictures.isNotEmpty
-          ? _FileAndName(File(pictures.first.path), pictures.first.name)
-          : null;
+      _video = videos.isNotEmpty ? videos.first : null;
+      _thumbnail = pictures.isNotEmpty ? pictures.first : null;
     });
   }
 
@@ -88,20 +84,17 @@ class _VideoUploaderState extends ConsumerState<VideoUploader> {
     });
     final videoExt = extension(_video!.name);
     final videoLink =
-        await StorageUtil.upload(userId, _video!.file, videoExt, false);
+        await StorageUtil.upload(userId, _video!, videoExt, false);
     // TODO: handle failed
     final imageExt = extension(_thumbnail!.name);
     final thumbnailLink =
-        await StorageUtil.upload(userId, _thumbnail!.file, imageExt, true);
+        await StorageUtil.upload(userId, _thumbnail!, imageExt, true);
     setState(() {
       _isUploading = false;
     });
+
+    // TODO: gets correct link but cannot download when rendered in markdown
+    // because markdown automatically replaces %2F with /
     return '[![IMAGE]($thumbnailLink)]($videoLink)';
   }
-}
-
-class _FileAndName {
-  _FileAndName(this.file, this.name);
-  final File file;
-  final String name;
 }
