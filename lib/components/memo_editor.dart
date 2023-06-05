@@ -131,6 +131,18 @@ class MemoEditor extends HookConsumerWidget {
 
   const MemoEditor({Key? key, required this.memo}) : super(key: key);
 
+  void _insert(String markdown, TextEditingController contentEditor) async {
+    final replaceString = '$markdown\n';
+    final baseOffset = contentEditor.selection.baseOffset;
+    contentEditor.text = contentEditor.text.replaceRange(
+      contentEditor.selection.baseOffset,
+      contentEditor.selection.extentOffset,
+      replaceString,
+    );
+    final newOffset = baseOffset + replaceString.length;
+    contentEditor.selection = TextSelection.collapsed(offset: newOffset);
+  }
+
   void _insertImage(String url, TextEditingController contentEditor) async {
     String subString = contentEditor.text.substring(
       contentEditor.selection.baseOffset,
@@ -205,14 +217,17 @@ class MemoEditor extends HookConsumerWidget {
           }
           break;
         case 2:
-          // TODO: insert to markdown
-          showDialog(
+          final markdown = await showDialog<String?>(
             context: context,
             barrierDismissible: true,
             builder: (ctx) {
               return const VideoUploader();
             },
           );
+          if (markdown == null) {
+            return;
+          }
+          _insert(markdown, contentEditor);
           break;
         default:
       }
