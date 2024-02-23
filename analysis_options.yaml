@@ -55,7 +55,7 @@ dart_code_metrics:
   metrics-exclude:
     - test/**
   rules:
-    - newline-before-return
+    # - newline-before-return
     - no-boolean-literal-compare
     - prefer-trailing-comma
     - prefer-conditional-expressions

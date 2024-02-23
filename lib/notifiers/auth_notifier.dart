@@ -22,20 +22,27 @@ class AuthNotifier extends StateNotifier<IsLoading> {
     GoogleAuthProvider googleProvider = GoogleAuthProvider();
     // googleProvider
     //     .addScope('https://www.googleapis.com/auth/contacts.readonly');
-    final userCredential =
-        await FirebaseAuth.instance.signInWithPopup(googleProvider);
-    final user = userCredential.user;
-    if (user == null) {
-      isLoading = false;
-
-      return;
-    }
     try {
-      await FirestoreUtil.updateUser(user);
-      showSnackBar('Signed in with ${user.email ?? user.displayName}');
+      final userCredential =
+          await FirebaseAuth.instance.signInWithPopup(googleProvider);
+      final user = userCredential.user;
+      if (user == null) {
+        isLoading = false;
+        return;
+      }
+      try {
+        await FirestoreUtil.updateUser(user);
+        showSnackBar('Signed in with ${user.email ?? user.displayName}');
+      } catch (e) {
+        showSnackBar('Error updating user $e');
+      } finally {
+        isLoading = false;
+      }
+    } on FirebaseAuthException catch (e) {
+      showSnackBar('Failed with error code: ${e.code}');
+      isLoading = false;
     } catch (e) {
-      showSnackBar('Error updating user $e');
-    } finally {
+      showSnackBar('Failed with error code: $e');
       isLoading = false;
     }
   }
