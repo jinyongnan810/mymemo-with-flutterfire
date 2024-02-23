@@ -129,7 +129,7 @@ class PressEnterAction extends Action<PressEnterIntent> {
 class MemoEditor extends HookConsumerWidget {
   final Memo memo;
 
-  const MemoEditor({Key? key, required this.memo}) : super(key: key);
+  const MemoEditor({super.key, required this.memo});
 
   void _insert(String markdown, TextEditingController contentEditor) async {
     final replaceString = '$markdown\n';

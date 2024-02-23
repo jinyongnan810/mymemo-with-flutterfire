@@ -16,7 +16,7 @@ import 'package:mymemo_with_flutterfire/shared/loading.dart';
 
 class MemoDetailPage extends HookConsumerWidget {
   final String id;
-  const MemoDetailPage({Key? key, required this.id}) : super(key: key);
+  const MemoDetailPage({super.key, required this.id});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userId = ref.watch(userIdProvider);

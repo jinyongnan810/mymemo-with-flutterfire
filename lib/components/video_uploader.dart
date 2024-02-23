@@ -46,6 +46,9 @@ class _VideoUploaderState extends ConsumerState<VideoUploader> {
                   if (!mounted) {
                     return;
                   }
+                  if (!mounted) {
+                    return;
+                  }
                   Navigator.of(context).pop(link);
                 },
           child: _isUploading

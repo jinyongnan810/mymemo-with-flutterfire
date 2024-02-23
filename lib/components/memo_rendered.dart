@@ -7,8 +7,11 @@ import 'package:url_launcher/url_launcher_string.dart';
 class MemoRendered extends StatelessWidget {
   final String content;
   final bool withPadding;
-  const MemoRendered({Key? key, required this.content, this.withPadding = true})
-      : super(key: key);
+  const MemoRendered({
+    super.key,
+    required this.content,
+    this.withPadding = true,
+  });
 
   @override
   Widget build(BuildContext context) {

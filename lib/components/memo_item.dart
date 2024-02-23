@@ -11,7 +11,7 @@ import 'package:mymemo_with_flutterfire/providers/user_info_provider.dart';
 
 class MemoItem extends ConsumerWidget {
   final Memo memo;
-  const MemoItem(this.memo, {Key? key}) : super(key: key);
+  const MemoItem(this.memo, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
