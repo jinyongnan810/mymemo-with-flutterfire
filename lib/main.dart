@@ -1,6 +1,7 @@
 import 'dart:async';
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html';
+// TODO: migrate to web: https://dart.dev/interop/js-interop/package-web
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
