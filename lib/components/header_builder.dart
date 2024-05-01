@@ -4,6 +4,8 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
 
 class CenteredHeaderBuilder extends MarkdownElementBuilder {
+  CenteredHeaderBuilder({this.larger = false});
+  final bool larger;
   @override
   // ignore: long-method
   Widget visitText(md.Text text, TextStyle? preferredStyle) {
@@ -22,7 +24,7 @@ class CenteredHeaderBuilder extends MarkdownElementBuilder {
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: SelectableText(
               text.text,
-              style: preferredStyle,
+              style: preferredStyle?.copyWith(fontSize: larger ? 40 : 24),
             ),
           ),
           const Expanded(

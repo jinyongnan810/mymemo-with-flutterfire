@@ -1,8 +1,8 @@
 {
     "@@locale": "ja",
-    "appTitle": "きんのぺーじ",
-    "loginHint": "ろぐいん",
-    "logoutHint": "ろぐあうと",
+    "appTitle": "Kinn's Page",
+    "loginHint": "ログイン",
+    "logoutHint": "ログアウト",
     "loggedInHint": "{email}でログインしています。",
     "@loggedInHint": {
         "placeholders": {

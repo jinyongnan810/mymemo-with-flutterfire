@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:mymemo_with_flutterfire/components/loading/loading_screen.dart';
 import 'package:mymemo_with_flutterfire/firebase_options.dart';
@@ -66,7 +67,13 @@ class MyApp extends StatelessWidget {
       // title: K.of(context)!.appTitle,
       onGenerateTitle: (ctx) => K.of(ctx)!.appTitle,
       scaffoldMessengerKey: scaffoldMessengerKey,
-      theme: ThemeData.dark(),
+      theme: ThemeData(
+        colorScheme: const ColorScheme.dark(),
+        textTheme: GoogleFonts.caveatTextTheme().apply(
+          bodyColor: Colors.white,
+          displayColor: Colors.white,
+        ),
+      ),
       routerConfig: _router,
       debugShowCheckedModeBanner: false,
       // after changing to .router, need change navigatorKey to scaffoldMessengerKey

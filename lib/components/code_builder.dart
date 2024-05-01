@@ -41,10 +41,10 @@ class CodeBuilder extends MarkdownElementBuilder {
             theme: oceanTheme,
 
             // Specify padding
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
 
             // Specify text style
-            textStyle: GoogleFonts.robotoMono(),
+            textStyle: GoogleFonts.caveat().copyWith(fontSize: 20),
           ),
         ),
       ),

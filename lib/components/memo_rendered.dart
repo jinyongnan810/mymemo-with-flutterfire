@@ -23,7 +23,7 @@ class MemoRendered extends StatelessWidget {
           Theme.of(context).copyWith(
             cardColor: Colors.transparent,
             textTheme: Theme.of(context).textTheme.copyWith(
-                  bodyMedium: const TextStyle(fontSize: 16),
+                  bodyMedium: const TextStyle(fontSize: 20),
                 ),
           ),
         ),
@@ -49,7 +49,7 @@ class MemoRendered extends StatelessWidget {
         selectable: true,
         builders: {
           'code': CodeBuilder(),
-          'h1': CenteredHeaderBuilder(),
+          'h1': CenteredHeaderBuilder(larger: true),
           'h2': CenteredHeaderBuilder(),
         },
         imageBuilder: (uri, title, alt) {
