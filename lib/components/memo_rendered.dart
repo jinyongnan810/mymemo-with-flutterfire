@@ -60,6 +60,7 @@ class MemoRendered extends StatelessWidget {
             ),
           );
         },
+        softLineBreak: true,
       ),
     );
   }
