@@ -1,6 +1,6 @@
 {
     "@@locale": "ja",
-    "appTitle": "Kinn's Page",
+    "appTitle": "Kin's Page",
     "loginHint": "ログイン",
     "logoutHint": "ログアウト",
     "loggedInHint": "{email}でログインしています。",
