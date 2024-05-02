@@ -25,6 +25,7 @@ class MemoListPage extends ConsumerWidget {
         backgroundColor: Colors.transparent,
         appBar: AppBar(
           title: Text(K.of(context)!.appTitle),
+          centerTitle: false,
           backgroundColor: Colors.transparent,
           elevation: 0,
           actions: [
@@ -37,8 +38,11 @@ class MemoListPage extends ConsumerWidget {
               },
               icon: const Icon(Icons.search),
             ),
+            const Padding(
+              padding: EdgeInsets.only(right: 12),
+              child: MyUserProfile(),
+            ),
           ],
-          leading: const MyUserProfile(),
         ),
         body: const MemoList(),
         floatingActionButton: const AddNewMemoButton(),
