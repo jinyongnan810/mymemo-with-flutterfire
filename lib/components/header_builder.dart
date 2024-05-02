@@ -10,30 +10,15 @@ class CenteredHeaderBuilder extends MarkdownElementBuilder {
   // ignore: long-method
   Widget visitText(md.Text text, TextStyle? preferredStyle) {
     return Padding(
-      padding: const EdgeInsets.only(top: 15, bottom: 7),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          const Expanded(
-            child: Divider(
-              color: Colors.white,
-              thickness: 2,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: SelectableText(
-              text.text,
-              style: preferredStyle?.copyWith(fontSize: larger ? 40 : 24),
-            ),
-          ),
-          const Expanded(
-            child: Divider(
-              color: Colors.white,
-              thickness: 2,
-            ),
-          ),
-        ],
+      padding: const EdgeInsets.only(top: 12, bottom: 4),
+      child: SelectableText(
+        text.text,
+        style: preferredStyle?.copyWith(
+          fontSize: larger ? 40 : 24,
+          decoration: TextDecoration.underline,
+          decorationColor: Colors.white,
+          decorationStyle: TextDecorationStyle.double,
+        ),
       ),
     );
   }

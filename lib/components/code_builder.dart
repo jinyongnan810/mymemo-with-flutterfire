@@ -20,9 +20,12 @@ class CodeBuilder extends MarkdownElementBuilder {
       language = lg.substring(9);
     }
 
+    final isBlock = element.textContent.contains('\n');
+
     return SizedBox(
+      width: isBlock ? double.infinity : null,
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(10.0),
+        borderRadius: BorderRadius.circular(isBlock ? 12.0 : 4.0),
         child: GestureDetector(
           onLongPress: () {
             Clipboard.setData(ClipboardData(text: element.textContent));
@@ -41,7 +44,10 @@ class CodeBuilder extends MarkdownElementBuilder {
             theme: oceanTheme,
 
             // Specify padding
-            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+            padding: EdgeInsets.symmetric(
+              vertical: isBlock ? 8 : 1,
+              horizontal: isBlock ? 12 : 4,
+            ),
 
             // Specify text style
             textStyle: GoogleFonts.caveat().copyWith(fontSize: 20),
