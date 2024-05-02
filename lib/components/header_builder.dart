@@ -14,6 +14,7 @@ class CenteredHeaderBuilder extends MarkdownElementBuilder {
       child: SelectableText(
         text.text,
         style: preferredStyle?.copyWith(
+          fontWeight: FontWeight.bold,
           fontSize: larger ? 40 : 24,
           decoration: TextDecoration.underline,
           decorationColor: Colors.white,
