@@ -2,9 +2,9 @@
 
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 // ignore: depend_on_referenced_packages
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:mymemo_with_flutterfire/components/memo_editor.dart';
 import 'package:mymemo_with_flutterfire/components/memo_rendered.dart';
@@ -47,7 +47,7 @@ class MemoDetailPage extends HookConsumerWidget {
     return memoFuture.when(
       data: (memo) => MemoDetail(
         memo: memo,
-        isMine: true,
+        isMine: userId != null && memo?.userId == userId,
         onAddMemo: (memo) =>
             ref.read(memosNotifierProvider.notifier).addItem(memo),
         onSaveMemo: (memo) =>
@@ -126,6 +126,7 @@ class MemoDetail extends HookWidget {
               backgroundColor: Colors.transparent,
               foregroundColor: Colors.white,
               elevation: 0,
+              shape: const CircleBorder(),
               onPressed: () async {
                 if (editing.value) {
                   final isNewMemo = memo!.id == null;

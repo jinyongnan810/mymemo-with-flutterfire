@@ -28,6 +28,7 @@ class AddNewMemoButton extends ConsumerWidget {
                 onPressed: () {
                   context.go('/memos/new');
                 },
+                shape: const CircleBorder(),
                 child: const Icon(Icons.add),
               ),
             )
